@@ -1,0 +1,172 @@
+/* General Styling */
+.signup-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width:400px;
+}
+.signup-page{
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    animation: slideIn 1s ease;
+}
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+  }
+.header-img img{
+    margin-bottom: 20px;
+}
+.signup-box {
+    padding: 20px;
+    width: 100%;
+    border-radius: 10px;
+    max-width: 400px;
+}
+
+.signup-box h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.signup-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.wrapper {
+    position: relative;
+}
+
+.icon {
+
+    color: #555;
+    font-size: 1.2rem;
+}
+.signup-main .main-left{
+    margin-top: 200px;
+}
+.signup-main .main-left img{
+    width: 550px;
+}
+.signup-box form input,.PhoneInput {
+    width: 100%;
+    padding: 10px 10px 10px 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.signup-button {
+    width: 100%;
+    padding: 10px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.signup-button:hover {
+    background-color: #0056b3;
+}
+
+.login-link {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.login-link a {
+    color: green;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+
+/* Mobile styles */
+@media only screen and (max-width: 600px) {
+    .main-left {
+        display: none; /* Hide left image on mobile */
+    }
+     .main-right{
+        all: unset !important;
+        
+     }
+    .header-img {
+        height: 100px;
+    }
+
+    .signup-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        width: 320px;
+    }
+
+    .signup-box {
+        background-color: white;
+         padding: 20px;
+        align-self: center;
+        width: 300px;
+   border-radius: 8px;
+   z-index: 2;/* Adjust height */
+    }
+
+    .signup-box h2 {
+        font-size: 1.5rem; /* Adjust font size for mobile */
+    }
+
+    .signup-box form {
+        
+        padding: 15px;
+        margin: 10px 0;
+    }
+
+    .signup-box form input,.PhoneInput {
+        height: 2.5rem; /* Slightly taller input */
+        padding: 5px;
+        font-size: 1rem;
+        padding-left: 1.9rem; /* More padding */
+    }
+
+    .signup-link {
+        text-align: center;
+        font-size: 12px;
+    }
+
+    .signup-link a {
+        text-decoration: underline;
+        color: crimson;
+    }
+}
+
+@media only screen and (max-width:768px){
+    .main-left{
+        display: none;
+     }
+}
+@media only screen and (max-width:1024px){
+    .signup-main .main-left img{
+        width: 400px;
+    }
+    .signup-box{
+        width: 300px;
+
+    }
+.signup-container{
+    width: 290px;
+}
+  
+}

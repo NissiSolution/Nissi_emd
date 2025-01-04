@@ -1,0 +1,111 @@
+
+#nav{
+    color: #333;
+    height: 66px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color:#eff2f5;
+    
+ }
+ .figure img{
+        width: 49px;
+        height: 45px;
+    }
+  .nav-list ul{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .nav-list ul li{
+        padding-right: 30px;
+        list-style-type: none;
+    }
+    .nav-list ul li a{
+        color: #000;
+        text-decoration: none;
+    }
+    
+.burger-list{
+
+    display: none !important;
+    
+}
+.header-title{
+    display: none;
+}
+  
+
+
+
+@media only screen and (min-width:320px) and (max-width:480px){
+#nav{
+    color: #333;
+    background-color: #fff;
+    align-content: center;
+}
+.figure{
+    display: none;
+}
+ 
+.header-title{
+    display: block;
+   color:#000;
+   font-size: 20px;
+}
+.header-title span{
+  font-size: 20px;
+  font-weight: bolder;  
+    margin-right: 5px;
+    color:#333;
+
+}
+.nav-list{
+    display: none;
+}
+.nav-burger{
+  display: block !important;
+  position: absolute;
+  top: 50px;
+  height: calc(100vh - 50px);
+width: 100vw;
+background-color: rgba(225,225,225,0.9999);       
+z-index: 100; 
+  transition: all 3s 3s ease; 
+  display: flex; /* Enable flexbox */
+        justify-content: center; /* Center items horizontally */
+        align-items: center; /* Center items vertically */
+        flex-direction: column; /* Align items in a column */
+}
+ .nav-burger .active {
+        left: 0; /* Slide in when active */
+    }
+.nav-burger ul{
+    all:unset !important;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+width: 100%;
+}
+.nav-burger ul li{
+        padding: 20px 0;
+ text-align: center; /* Center text inside li */
+        width: 100%; /* Ensure li takes full width */
+    border-bottom: 1px solid #ccc; 
+}
+.nav-burger ul li:last-child {
+    border-bottom: none; /* No border for the last item */
+}
+.burger-list{
+    all:unset !important;
+    cursor: pointer;;
+}
+  .hamburger{
+margin-left: 10px;
+z-index: 10;  
+}  
+.burger{
+    margin-bottom: 5px;
+}
+}
