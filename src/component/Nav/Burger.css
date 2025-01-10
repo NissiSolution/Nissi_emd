@@ -8,10 +8,10 @@ flex-wrap: nowrap;
 z-index:10;
 }
 .burger{
-width:2rem;
-height:0.25rem;
+width:1.9rem;
+height:0.24rem;
 border-radius:20px;
-background-color:black;
+background-color:#FFFFFC;
 transform-origin:10px;
 transition:all 0.3s linear;
  

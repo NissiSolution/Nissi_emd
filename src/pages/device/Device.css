@@ -1,0 +1,132 @@
+.device-page{
+
+    display: grid;
+                         grid-template-columns: 200px 2fr;
+                         grid-template-areas: 'sidebar main' 'sidebar main''footer footer';
+}
+.device-sidebar{
+    grid-area: sidebar;
+}
+.device-main{
+    grid-area: main;
+}
+.device-footer{
+    grid-area: footer;
+}
+
+@media only screen and (max-width: 600px) {
+    .device-page{
+        display: flex;
+        flex-direction: column;
+    }
+    .device-footer{
+        justify-content: flex-end;
+    }
+    .device-info {
+        padding:5px;
+       .device-lead {
+        margin-bottom: 10px;
+        }
+
+    
+    }
+    .device-img{
+        padding: 5px;
+        border: 1px solid #333;
+    
+     figure{
+        all: unset !important;
+          width: 100%;
+    }
+    figure>div{
+        text-align: center; 
+    }
+    }
+
+.device-img figcaption{
+
+    padding: 5px 25px !important;
+    line-break: strict;
+    line-height: 1.7;
+    font-size: 13px;
+}
+    .device-img figure img{
+
+        width: fit-content;
+        border-radius: 10px;
+    }
+    
+}
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) and (max-width:992px){
+    .device-info {
+        padding:5px;
+        .device-lead {
+        margin-bottom: 10px;
+        }
+
+    
+    }
+    .device-img{
+        padding: 5px;
+        border: 1px solid #333;
+     
+     figure{
+        align-items: center;
+
+          width: 100%;
+    }
+    figure>div{
+        text-align: center; 
+    }
+    }
+
+.device-img figcaption{
+    
+    padding: 5px 10px  !important;
+    line-break: strict;
+    line-height: 1.7;
+    font-size: 16px;
+}
+    .device-img figure img{
+        width: fit-content;
+        border-radius: 10px;
+    }
+}
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {}
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {}
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {}
+
+.device-info{
+    padding: 10px;
+}
+.device-img{
+    padding: 5px;
+    border: 2px solid black;
+    border-radius: 5px;
+}
+.device-img figure{
+    display: flex;
+padding: 5px;
+
+}
+.device-lead{
+    font-weight: bolder;
+    font-size: 25px;
+    margin-bottom: 10px;
+
+}
+.device-img img{
+    border-radius: 10px;
+}
+.device-img figure >div{
+    padding: 0 10px;
+}
+.device-img figure figcaption{
+    text-overflow: clip;
+
+    padding: 40px;
+}

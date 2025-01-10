@@ -4,4 +4,15 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Overpass", serif;
+  line-height: 1.5;
+}
+
+:root{
+--primary-bg-color:#f9fbf8;
+/* --primary-bg-color:#f2f7ff; */
+/* --secondary-bg-color:#Fff;
+--primary-text-color:#25396f;
+--secondary-text-color:#fcfdfe; */
+
+
 }

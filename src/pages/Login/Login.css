@@ -4,11 +4,17 @@
 .login-page{
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     animation: slideIn 1s ease;
+  
+    
 }
+.login-page::-webkit-scrollbar {
+    display: none;
+  }
   .icon {
     height: 1.3rem;
     width: 1.3rem;
     padding: 4px;
+    
     position: absolute;
     box-sizing:border-box;
     top:50%;
@@ -57,7 +63,7 @@ float: left;
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(10px);
     }
     to {
         opacity: 1;
@@ -126,12 +132,19 @@ z-index: 2;
     font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 .main-right{
-display: flex;
+
+    display: flex;
 flex-direction: column;
 align-content: center;
 }
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
+   
+   .login-page{
+display: flex;
+justify-content: center;
+
+   }
     .icon {
         height: 1.3rem;
         width: 1.3rem;

@@ -10,7 +10,6 @@ import { setAuth } from "../Slice/Slice";
 export default function Nav() {
   const [hamburgerIsOpen, setHamburgerIsOpen] = useState(false);
   const navigate = useNavigate(); // Initialize navigate
-  const dispatch = useDispatch();
 
   const toggleHamburger = () => {
     setHamburgerIsOpen(!hamburgerIsOpen);

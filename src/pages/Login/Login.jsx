@@ -1,7 +1,6 @@
 import React from 'react'
 import'./Login.css'
 import tech from '../../assets/technology.png'
-import logo from '../../assets/logo.png'
 import left from '../../assets/left.jpg'
 import { CgProfile } from "react-icons/cg";
 import { RiLockPasswordLine } from "react-icons/ri";

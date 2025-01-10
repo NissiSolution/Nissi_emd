@@ -12,10 +12,10 @@ export default function Signup() {
     <>
       <div className="signup-page">
         <main className="signup-main">
-          <div className="main-left">
+          <div className="main-left signup-left">
             <img src={left} alt="Left Visual" />
           </div>
-          <div className="main-right">
+          <div className="main-right signup-right">
             <div className="header-img">
               <img src={tech} alt="Technology Icon" />
             </div>
