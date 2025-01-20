@@ -34,11 +34,11 @@
         padding: 5px;
         border: 1px solid #333;
     
-     figure{
+     .device-img-lead{
         all: unset !important;
           width: 100%;
     }
-    figure>div{
+    .device-img-lead >div{
         text-align: center; 
     }
     }
@@ -50,7 +50,7 @@
     line-height: 1.7;
     font-size: 13px;
 }
-    .device-img figure img{
+    .device-img .device-img-lead img{
 
         width: fit-content;
         border-radius: 10px;
@@ -76,7 +76,7 @@
 
           width: 100%;
     }
-    figure>div{
+    .device-img-lead>div{
         text-align: center; 
     }
     }
@@ -88,7 +88,7 @@
     line-height: 1.7;
     font-size: 16px;
 }
-    .device-img figure img{
+    .device-img .device-img-lead img{
         width: fit-content;
         border-radius: 10px;
     }
@@ -108,7 +108,7 @@
     border: 2px solid black;
     border-radius: 5px;
 }
-.device-img figure{
+.device-img .device-img-lead{
     display: flex;
 padding: 5px;
 
@@ -122,10 +122,10 @@ padding: 5px;
 .device-img img{
     border-radius: 10px;
 }
-.device-img figure >div{
+.device-img .device-img-lead >div{
     padding: 0 10px;
 }
-.device-img figure figcaption{
+.device-img .device-img-lead figcaption{
     text-overflow: clip;
 
     padding: 40px;

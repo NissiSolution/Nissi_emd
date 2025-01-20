@@ -16,7 +16,7 @@ export default function Device() {
           <div className="device-info">
             <h3 className="device-lead">Energy Monitoring Device</h3>
             <section className="device-img">
-              <figure>
+              <figure className="device-img-lead">
                 <div>
                 <img src={emd} alt="emdDevice" width={"400px"} height={'200px'} />
 
@@ -30,6 +30,59 @@ export default function Device() {
               </figure>
               
             </section>
+          </div>
+          <div className="card-section">
+          <h3>Active Devices</h3>
+    <div className="current-statue-card">
+       <div className="card">
+        <p>Device Id:</p>
+        <p>Device Name:</p>
+        <p>Device Location:</p>
+       </div>
+       <div className="card">
+        <p>Device Id:</p>
+        <p>Device Name:</p>
+        <p>Device Location:</p>
+       </div>
+       <div className="card">
+        <p>Device Id:</p>
+        <p>Device Name:</p>
+        <p>Device Location:</p>
+       </div>
+       <div className="card">
+        <p>Device Id:</p>
+        <p>Device Name:</p>
+        <p>Device Location:</p>
+       </div>
+       
+      
+    </div>
+          <div className="available-card">
+    <h3>Available Devices</h3>
+    <div className="available-cards">
+<div className="card">
+        <p>Device Id:</p>
+        <p>Device Name:</p>
+        <p>Device Location:</p>
+       </div>
+<div className="card">
+        <p>Device Id:</p>
+        <p>Device Name:</p>
+        <p>Device Location:</p>
+       </div>
+<div className="card">
+        <p>Device Id:</p>
+        <p>Device Name:</p>
+        <p>Device Location:</p>
+       </div>
+  <div className="card">
+          <p>Device Id:</p>
+          <p>Device Name:</p>
+          <p>Device Location:</p>
+        </div>
+    </div>
+    
+    </div>
           </div>
         </div>
         <footer className="device-footer">

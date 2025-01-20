@@ -32,7 +32,7 @@ function Sidebar() {
             </div>
             {hamburgerIsOpen&&(<>
               <div className="">
-  <NavLink to='/profile'>Profile</NavLink>
+  <NavLink to='/user'>Profile</NavLink>
 </div>
               <div className="">
   <p>Logout</p>
@@ -46,7 +46,7 @@ function Sidebar() {
 
             <section className="logout-section">
             <div className="profile">
-             <p><span><FaRegUserCircle /></span>&nbsp;User</p>
+             <NavLink to='/user'><span><FaRegUserCircle /></span>&nbsp;User</NavLink>
             </div>
             <div className="logout">
             <p ><span><FiLogOut /></span> Logout</p>

@@ -74,32 +74,7 @@ function Dashboard() {
        
       
     </div>
-    <div className="available-card">
-    <h3>Available Devices</h3>
-    <div className="available-cards">
-<div className="card">
-        <p>Device Id:</p>
-        <p>Device Name:</p>
-        <p>Device Location:</p>
-       </div>
-<div className="card">
-        <p>Device Id:</p>
-        <p>Device Name:</p>
-        <p>Device Location:</p>
-       </div>
-<div className="card">
-        <p>Device Id:</p>
-        <p>Device Name:</p>
-        <p>Device Location:</p>
-       </div>
-  <div className="card">
-          <p>Device Id:</p>
-          <p>Device Name:</p>
-          <p>Device Location:</p>
-        </div>
-    </div>
-    
-    </div>
+  
 </section>
 
    </section>
