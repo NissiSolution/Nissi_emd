@@ -167,6 +167,17 @@ border-radius: 7px;
   transform: scale(1.05);
   cursor: pointer;
 }
+
+.active-card{
+position: relative;
+}
+.active-status{
+  color: green;
+
+  position: absolute;
+right: 20px;
+top: 20px;
+}
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
   .dashboard{

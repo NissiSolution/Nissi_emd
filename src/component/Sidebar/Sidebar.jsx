@@ -7,6 +7,8 @@ import { FaRegUserCircle } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import './Sidebar.css'
 function Sidebar() {
+  const role=localStorage.getItem('role');
+
       const navigate=useNavigate()
       const [hamburgerIsOpen, setHamburgerIsOpen] = useState(false);
       const toggleHamburger = () => {
@@ -28,6 +30,16 @@ function Sidebar() {
         </div>
          <div className={`side-nav ${hamburgerIsOpen ?'nav-burger':''}`}>
           <div className='links'>
+
+            {role==='admin'&&(
+              <>
+              <div>
+              <NavLink to='/admin' activeClassName="active" >Admin</NavLink>
+  
+              </div>
+              </>
+            )
+            }
           <div>
             <NavLink to='/dashboard' activeClassName="active" >Dashboard</NavLink>
 

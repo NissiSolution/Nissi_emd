@@ -6,107 +6,96 @@ import left from '../../assets/left.jpg'
 import { CgProfile } from "react-icons/cg";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 export default function Login() {
-    let userid;
-   const navigate=useNavigate()
-    const [currentUser,setCurrentUser]=useState({})  
+    const navigate = useNavigate();
+    const [currentUser , setCurrentUser ] = useState({ email: '', password: '' });
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setCurrentUser((prev) => ({
-          ...prev,
-          [name]: value,
+        setCurrentUser ((prev) => ({
+            ...prev,
+            [name]: value,
         }));
-    }
-    
-  const handleSubmit = async (e) => {
-e.preventDefault();
-if(currentUser.email===null||currentUser===null){
-    alert('enter the email')
-}else if(currentUser.password===null){
-    alert('enter the password')
+    };
 
-}
+    const handleSubmit = async (e) => {
+        e.preventDefault();
 
- 
+        if (!currentUser .email) {
+            alert('Enter the email');
+            return;
+        } else if (!currentUser .password) {
+            alert('Enter the password');
+            return;
+        }
 
- 
-const data = {
-        requestType: "authAccount",
-        data: JSON.stringify({ email: currentUser.email,password:currentUser.password }),
-      };
-      try{
+        const data = {
+            requestType: "authAccount",
+            data: JSON.stringify({ email: currentUser .email, password: currentUser .password }),
+        };
 
-        const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          });
-                   
-          // Handle response
-          if (response.status === 200) {
-            
-            if (response.data === "failure") {
-              console.error("Request failed:", response.data);
-              // Replace the following with your preferred error message handling
-              alert("Request failed: " + response.data);
-            } else {
-              
-              if(response.data==='password-error')
-              {
-                alert('invalid Password')
-              }else if(response.data==='email-error')
-                {
-                  alert('invalid Password')
-                }
-                else{
+        try {
+            const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+
+            // Handle response
+            if (response.status === 200) {
+                if (response.data === "failure") {
+                    alert("Request failed: " + response.data);
+                } else if (response.data === 'password-error') {
+                    alert('Invalid Password');
+                } else if (response.data === 'email-error') {
+                    alert('Invalid Email');
+                } else {
+                    // Assuming response.data contains the user ID
+                    const userid = response.data.match(/\d+/)[0];
                     
-                    userid=response.data.match(/\d+/)[0]
-                    const role= await fetchData()
+                    const role = await fetchData(userid); // Pass userid to fetchData
+                          
                     localStorage.setItem("userId", userid);
-                    localStorage.setItem("role", role === 1 ? "admin" : "user");
+                    localStorage.setItem("role", role === '1' ? "admin" : "user");
                     localStorage.setItem("auth", true);
-            
                     // Navigate to the appropriate page
-                    role === 1 ? navigate("/admin") : navigate("/dashboard");
-                    
+                     // Assuming role is a string
+                role === '1' ? navigate("/admin") : navigate("/dashboard");
                 }
-           
+            } else {
+                console.error("Unexpected response code:", response.status);
             }
-          } else {
-            console.error("Unexpected response code:", response.status);
-          }
         } catch (error) {
-          console.error("Error during API call:", error);
+            console.error("Error during API call:", error);
         }
-  
+    };
 
+    const fetchData = async (userid) => {
+        const data = {
+            requestType: 'getUser',
+            data: JSON.stringify({ userId: userid }),
+        };
+        try {
+            const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
 
-  }
-
-   const fetchData=async()=>{
-    const data={
-        requestType:'getUser',
-        data: JSON.stringify({ userId:userid}),
-    }
-    try{
-
-        const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-          });
-         
-          
-          return await JSON.parse(response.data.role)
-
-
-        }catch(error){
-        console.error(error);
-        
+            // Assuming response.data contains the role
+            if(response.data)
+            {
+              const role = response.data.role; // Adjust based on actual response structure
+              localStorage.setItem('user',response.data.username)
+             console.log(response.data)
+              return role
+            }
+            ;
+        } catch (error) {
+            console.error(error);
         }
-
-   }
+    };
   return (
     <>
     <div className="login-page">
@@ -146,12 +135,8 @@ const data = {
         </form>
         <div className="signup-link">
         <p>Don't have an account? <Link to='/signup'>SignUp</Link></p>
-
         </div>
-
-    </div>
-
-             </div>
+    </div>             </div>
              </div>
         </main>
     </div>

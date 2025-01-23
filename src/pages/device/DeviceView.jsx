@@ -12,12 +12,29 @@ export default function DeviceView() {
   let {deviceId}=useParams();
   const location = useLocation();
   const { deviceData } = location.state || {};  
+  const [deviceDetails,setDeviceDetails]=useState()
+  console.log(deviceDetails);
+  
   const [currentDevice,setCurrentDevice]=useState()
   const [device,setDevice]=useState()
   const[RS485,setRS485]=useState()
   const[lora,setLora]=useState()
+  const [deviceInput,setDeviceInput]=useState()
   const [presentPower,setPresentPower]=useState()
-
+  const handleDeviceChange = (e) => {
+    const { name, value } = e.target;
+    setDeviceDetails((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+  const handleDeviceInputChange = (e) => {
+    const { name, value } = e.target;
+    setDeviceInput((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
   const [isProfileOpen, setIsProfileOpen] = useState(false);
       const [isPowerOpen,setIsPowerOpen]=useState(false)
       const [avgPower,setAvgPower]=useState()
@@ -32,6 +49,17 @@ export default function DeviceView() {
         }
       } 
       
+      const handleEditDeviceDetails = () => {
+        // Set device details when the modal opens
+        if (currentDevice) {
+          setDeviceDetails({
+            deviceId: currentDevice.deviceId,
+            device_name: currentDevice.device_name,
+            device_location: currentDevice.device_location,
+          });
+        }
+        SetIsDeviceDetailOpen(true)
+      };
       const meterValue=meter()
       let startValue,endValue;
       // console.log(meterValue);
@@ -177,6 +205,34 @@ document.onclick = handleDocumentClick;
 
    }
 
+
+  const handleDeviceSubmit = async (e) => {
+    e.preventDefault();
+    // Submit the updated device details
+    try {
+      const data = {
+        requestType: "updateInput2",
+        data: JSON.stringify(deviceDetails),
+      };
+      const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      if (response.status === 200) {
+        if(response.data ==='status-updated')
+        {
+        alert('Device details updated successfully');
+
+          SetIsDeviceDetailOpen(false); // Close the modal
+
+        }
+      }
+    } catch (error) {
+      console.error("Error updating device details:", error);
+    }
+  };
   useEffect(() => {
     getCurrentData();
     getCurrentDeviceDetails()
@@ -185,14 +241,14 @@ document.onclick = handleDocumentClick;
     }, 2000);  
 
     return () => clearInterval(intervalId);
-  }, [deviceId,currentDevice]);
+  }, [deviceId,currentDevice,deviceDetails]);
       let type=currentDevice?.type
   
   useEffect(() => {
     if (device) {
       setLora(device.lora_status);
       setRS485(device.rs485_status);
-      
+    
       if(device.t_kva > 0 && device.t_kw > 0){
             setPresentPower(parseFloat(device.t_kw)/parseFloat(device.t_kva))
       }
@@ -220,7 +276,7 @@ document.onclick = handleDocumentClick;
             </div>
             {isProfileOpen && (
                 <div className="edit-user device-action">
-                    <p onClick={()=>SetIsDeviceDetailOpen(true)}>Device Details</p>
+                    <p onClick={()=>handleEditDeviceDetails()}>Device Details</p>
                     <p onClick={()=>setIsPowerOpen(true)}>Power Max</p>
                 </div>
             )}
@@ -231,9 +287,9 @@ document.onclick = handleDocumentClick;
               <img src={img} alt="" />
             </figure>
             <div className="device-details">
-              <p>Device ID : {deviceData.deviceId}</p>
-              <p>Device Name :{deviceData.device_name}</p>
-        <p>Device Location: {deviceData.device_location}</p>
+              <p>Device ID : {currentDevice?.deviceId}</p>
+              <p>Device Name :{currentDevice?.device_name}</p>
+        <p>Device Location: {currentDevice?.device_location}</p>
             </div>
             </div>
           
@@ -249,7 +305,7 @@ document.onclick = handleDocumentClick;
     segments={10}  
     endColor="red"
     textColor={'#333'}
-    currentValueText={`${type === '0' ? 'Active Power Max Demand' : 'Apparent Power Max Demand'}`}
+    currentValueText={`${meterValue}  ${type === '0' ? 'Active Power Max Demand' : 'Apparent Power Max Demand'}    `}
      forceRender={true}
   />
             </div>
@@ -270,14 +326,14 @@ document.onclick = handleDocumentClick;
             <div className="active-power box">
               <p className="box-lead">Active PowerMaxDemand</p>
               <span className="box-sub-lead">
-                {device&&parseFloat(device.act_pwr_mxd).toFixed(2)|| 0.0}
+                {device&&parseFloat(device.act_pwr_mxd).toFixed(1)|| 0.0}
                 <span>Kw</span>
               </span>
             </div>
             <div className="active-power box">
               <p className="box-lead">ApparentPowerMaxDemand</p>
               <span className="box-sub-lead">
-                {device&&parseFloat(device.kva_mxd|| 0).toFixed(2)|| 0.0}
+                {device&&parseFloat(device.kva_mxd|| 0).toFixed(1)|| 0.0}
                 <span>Kw</span>
               </span>
             </div>
@@ -351,7 +407,7 @@ document.onclick = handleDocumentClick;
             </div>
             <div className="label">
                <div className="first-label">Present Power Factor</div>
-               <div className="second-label"><span className="cen">:</span>{parseFloat(presentPower).toFixed(3)}</div>
+               <div className="second-label"><span className="cen">:</span>{parseFloat(presentPower).toFixed(2)||0}</div>
             </div>
             <div className='space-bar'></div>
 
@@ -365,7 +421,7 @@ document.onclick = handleDocumentClick;
             </div>
             <div className="label">
                <div className="first-label">Average Power Factor</div>
-               <div className="second-label"><span className="cen">:</span> {parseFloat(avgPower).toFixed(3)}</div>
+               <div className="second-label"><span className="cen">:</span> {parseFloat(avgPower).toFixed(2)||0}</div>
             </div>
             <div className="label">
                <div className="first-label"> Active Power Max Demand</div>
@@ -444,12 +500,16 @@ document.onclick = handleDocumentClick;
           (<>
           <div className="modal-overlay">
             <div className="modal">
-              <form action="" className="device-view-details">
+              <form action="" className="device-view-details" onSubmit={handleDeviceSubmit}>
               <label>
                Device ID
                 <input
                   type="text"
                   required
+                  name='deviceId'
+
+                  value={deviceDetails?.deviceId||''}
+                  onChange={handleDeviceChange}
                 />
               </label>
               <label>
@@ -457,6 +517,10 @@ document.onclick = handleDocumentClick;
                 <input
                   type="text"
                   required
+                  onChange={handleDeviceChange}
+
+                  value={deviceDetails?.device_name||''}
+                  name='device_name'
                 />
               </label>
               <label>
@@ -464,10 +528,13 @@ document.onclick = handleDocumentClick;
                 <input
                   type="text"
                   required
+                  value={deviceDetails?.device_location||''}
+                  name='device_location'
+                  onChange={handleDeviceChange}
                 />
               </label>
               <div className="modal-actions">
-                <button type="button" className="cancel-btn" onClick={()=>{SetIsDeviceDetailOpen(false)}} >
+                <button type="button" className="cancel-btn" onClick={()=>{SetIsDeviceDetailOpen(false),setDeviceDetails('')}} >
                   Cancel
                 </button>
                 <button type="submit" className="save-btn">

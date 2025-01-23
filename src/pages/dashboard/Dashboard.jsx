@@ -1,15 +1,19 @@
 import React,{useState,useEffect} from 'react'
 import Sidebar from '../../component/Sidebar/Sidebar'
 import { IoPerson } from "react-icons/io5";
+import { HiStatusOnline } from "react-icons/hi";
 import './Dashboard.css'
 import welcome from '../../assets/welcome.svg'
 import asset1 from '../../assets/asset2.jpg'
 import Footer from '../../component/footer/Footer';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 function Dashboard() {
+  const navigate=useNavigate()
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [availableDevice,setAvailableDevice]=useState()
-
+const[activeDevice,setActiveDevice]=useState()
+  const user=localStorage.getItem('user')
   const role=localStorage.getItem('role');
   
   const userid=localStorage.getItem('userId')
@@ -41,12 +45,87 @@ function Dashboard() {
         }
 
    }
+   const activeDevices = [];
+   
+   const getActiveDeviceDetails = async (total) => {
+    try {
+  
+      // Check if total is defined and is an array
+  
+      for (let id of total) {
+
+        const data = {
+          requestType: "getCurrentData",
+          data: JSON.stringify({ deviceId: id }),
+        };
+  
+        const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        });
+  
+        // Handle response
+        if (response.status === 200) {
+  
+          let res;
+          // Check if response.data is a string and try to parse it
+          if (typeof response.data === 'string') {
+            try {
+              res = JSON.parse(response.data);
+            } catch (e) {
+              console.error("Error parsing response data:", e);
+              continue; // Skip this iteration if parsing fails
+            }
+          } else {
+            // If it's not a string, assume it's already an object
+            res = response.data;
+          }
+  // console.log(res);
+  
+          // Check if res is an object
+          if (res) {
+            // If it's a single object, convert it to an array
+            const items = Array.isArray(res) ? res : [res];
+  
+            items.forEach(item => {
+              // console.log(item);
+                if (item.rs485_status === '1' || item.lora_status === '1') {
+                  // console.log(item);
+                  
+                  activeDevices.push(item); // Add active device to the array
+                }
+              setActiveDevice(activeDevices)
+            });
+          } else {
+            console.error("Response is not an object:", res);
+          }
+        }
+      }
+  
+      // After the loop, you can set the active devices
+      // setActiveDevice(activeDevices);
+  
+    } catch (error) {
+      console.error("Error during API call:", error);
+    }
+  };
+
    useEffect(()=>{
 
     fetchData()
   
   },[])
-  console.log(availableDevice);
+   useEffect(() => {
+      const total = availableDevice?.map(res => res.deviceId);
+      if (total?.length > 0) {
+        getActiveDeviceDetails(total);
+      }
+    }, [availableDevice]);
+    const active = availableDevice?.filter(res => {
+      // Check if the current deviceId exists in the activeDevice array
+      return activeDevice?.some(re => res.deviceId === re.deviceId);
+    });
  
   return (
   <>
@@ -60,7 +139,7 @@ function Dashboard() {
       <img src={welcome} alt="Welcome" />
       <h2>
         Welcome Back, <br/>
-        User
+        {user}
       </h2>
       </div>
      
@@ -90,14 +169,11 @@ function Dashboard() {
 </figure>
 </div>
    )}
-   {role==='admin'&&(
+   {/* {role==='admin'&&(
     <>
     <div className="admin-main-content">
       
-      <div className="admin-card1">
-        <h3>Total Users</h3>
-         <p>2</p>
-      </div>
+      
       <div className="admin-card1">
         <h3>Total Devices</h3>
         <p>2</p>
@@ -109,16 +185,24 @@ function Dashboard() {
 
     </div>
     </>
-   )}
+   )} */}
 <section className='card-section'>
 <h3>Active Devices</h3>
     <div className="current-statue-card">
-       <div className="card">
-        <p>Device Id:</p>
-        <p>Device Name:</p>
-        <p>Device Location:</p>
-       </div>
-      
+
+    {active&&active.map(dev=>(
+                     <div className="card active-card" onClick={()=>{ navigate(`/devices/${dev.deviceId}`, {
+                      state: {
+                        deviceData: dev, 
+                      },
+                    })}}>
+                     <p>Device Id: {dev.deviceId}</p>
+                     
+                     <p>Device Name: {dev.device_name}</p>
+                     <p>Device Location:{dev.device_location}</p>
+                     <div className="active-status"> <HiStatusOnline className='react-icon' /></div>
+                   </div>
+                  ))}
        
       
     </div>
