@@ -13,13 +13,26 @@ export default function DeviceView() {
   const location = useLocation();
   const { deviceData } = location.state || {};  
   const [deviceDetails,setDeviceDetails]=useState()
-  console.log(deviceDetails);
-  
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+      const [isPowerOpen,setIsPowerOpen]=useState(false)
+      const [avgPower,setAvgPower]=useState()
+      const [isDeviceDetailOpen,SetIsDeviceDetailOpen]=useState(false)
   const [currentDevice,setCurrentDevice]=useState()
   const [device,setDevice]=useState()
   const[RS485,setRS485]=useState()
   const[lora,setLora]=useState()
-  const [deviceInput,setDeviceInput]=useState()
+  const [deviceInput,setDeviceInput]=useState({
+    deviceId: '',
+    buzzer_start_value:'',
+    buzzer_time: '',
+    relay1_start_value: '',
+    relay1_time: '',
+    relay1_wait_time: '',
+    relay2_start_value:'',
+    relay2_wait_time: '',
+    
+  })
+  
   const [presentPower,setPresentPower]=useState()
   const handleDeviceChange = (e) => {
     const { name, value } = e.target;
@@ -28,6 +41,25 @@ export default function DeviceView() {
       [name]: value,
     }));
   }
+  const handlePowerDeviceDetails = () => {
+    if (currentDevice) {
+      setDeviceInput({
+        deviceId: currentDevice.deviceId,
+        buzzer_start_value: currentDevice?.buzzer_start_value,
+        buzzer_time: currentDevice?.buzzer_time,
+        relay1_start_value: currentDevice?.relay1_start_value,
+        relay1_time: currentDevice?.relay1_time,
+        relay1_wait_time: currentDevice?.relay1_wait_time,
+        relay2_start_value: currentDevice?.relay2_start_value,
+        relay2_wait_time: currentDevice?.relay2_wait_time,
+        
+      });
+    }
+    setIsPowerOpen(true);
+  };
+  console.log(deviceInput);
+  
+
   const handleDeviceInputChange = (e) => {
     const { name, value } = e.target;
     setDeviceInput((prev) => ({
@@ -35,10 +67,7 @@ export default function DeviceView() {
       [name]: value,
     }));
   }
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-      const [isPowerOpen,setIsPowerOpen]=useState(false)
-      const [avgPower,setAvgPower]=useState()
-      const [isDeviceDetailOpen,SetIsDeviceDetailOpen]=useState(false)
+  
       const meter=()=>{
         if(currentDevice?.type==='0')
         {
@@ -233,6 +262,33 @@ document.onclick = handleDocumentClick;
       console.error("Error updating device details:", error);
     }
   };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+   
+      const data = {
+        requestType: "updateInput1",
+        data: JSON.stringify(deviceInput),
+      };
+      const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      if (response.status === 200) {
+        if(response.data)
+        {
+          alert('Device settings updated successfully');
+          setIsPowerOpen(false);
+        }
+        
+      }
+    } catch (error) {
+      console.error("Error updating device settings:", error);
+    }
+  };
+
   useEffect(() => {
     getCurrentData();
     getCurrentDeviceDetails()
@@ -250,16 +306,14 @@ document.onclick = handleDocumentClick;
       setRS485(device.rs485_status);
     
       if(device.t_kva > 0 && device.t_kw > 0){
-            setPresentPower(parseFloat(device.t_kw)/parseFloat(device.t_kva))
+            setPresentPower(parseFloat(device?.t_kw)/parseFloat(device?.t_kva)||'0')
       }
       if (device.t_act_energy > 0 && device.t_aprnt_engy > 0) {
         setAvgPower(parseFloat(device?.t_act_energy) / parseFloat(device?.t_aprnt_engy));
       }
     }
   }, [device]);  
-// console.log(currentDevice);
 
-  console.log(type);
   
   
   return (
@@ -277,7 +331,7 @@ document.onclick = handleDocumentClick;
             {isProfileOpen && (
                 <div className="edit-user device-action">
                     <p onClick={()=>handleEditDeviceDetails()}>Device Details</p>
-                    <p onClick={()=>setIsPowerOpen(true)}>Power Max</p>
+                    <p onClick={()=>handlePowerDeviceDetails()}>Power Max</p>
                 </div>
             )}
         </div>
@@ -340,7 +394,7 @@ document.onclick = handleDocumentClick;
             <div className="avg-power box">
               <p className="box-lead">Average Power Factor</p>
               <span className="box-sub-lead">
-                {avgPower&&parseFloat(avgPower).toFixed(3)||0.0} <span></span>
+                {avgPower&&parseFloat(avgPower).toFixed(2)||0.0} <span></span>
               </span>
             </div>
           
@@ -377,15 +431,15 @@ document.onclick = handleDocumentClick;
 
             <div className="label">
                <div className="first-label">Voltage R-Phase</div>
-               <div className="second-label"><span className="cen">:</span> {device?.i1||0.00} A</div>
+               <div className="second-label"><span className="cen">:</span> { parseFloat(device?.i1).toFixed(1)||0.00} A</div>
             </div>
             <div className="label">
                <div className="first-label"> Voltage Y-Phase</div>
-               <div className="second-label"><span className="cen">:</span> {device?.i2||0.00} A</div>
-            </div>
+               <div className="second-label"><span className="cen">:</span> { parseFloat(device?.i2).toFixed(1)||0.00} A</div>
+            </div> 
             <div className="label">
                <div className="first-label">Voltage B-Phase</div>
-               <div className="second-label"><span className="cen">:</span>{device?.i3||0.00} A</div>
+               <div className="second-label"><span className="cen">:</span>{ parseFloat(device?.i3).toFixed(1)||0.00} A</div>
             </div>
             <div className='space-bar'></div>
 
@@ -425,77 +479,102 @@ document.onclick = handleDocumentClick;
             </div>
             <div className="label">
                <div className="first-label"> Active Power Max Demand</div>
-               <div className="second-label"><span className="cen">:</span>{device?.act_pwr_mxd||0.00} kW</div>
+               <div className="second-label"><span className="cen">:</span>{parseFloat(device?.act_pwr_mxd).toFixed(2)||0.00} kW</div>
             </div>
             <div className="label">
                <div className="first-label"> Apparent Power Max Demand</div>
-               <div className="second-label"><span className="cen">:</span> {device?.kva_mxd||0.00} kWA</div>
+               <div className="second-label"><span className="cen">:</span> {parseFloat(device?.kva_mxd).toFixed(2)||0.00} kWA</div>
             </div>
 
 
           </div>
-          {
-            isPowerOpen&&(<>
+          {isPowerOpen && (
             <div className="modal-overlay">
-              <div className="modal">
-                <form action="" className='power-max'>
-                <label>
-               Buzzer Min Value
-                <input
-                  type="text"
-                  required
-                />
-              </label>
-              <label>
-              Buzzer Watch Time(in minutes)
-                <input
-                  type="text"
-                  required
-                />
-              </label>
-              <label>
-               Feeder Min Value
-                <input
-                  type="text"
-                  required
-                />
-              </label>
-                <label>
-               Feeder Wait Time After PowerOFF(in minutes)
-                <input
-                  type="text"
-                  required
-                />
-              </label>
-              <label>
-              Motor Min Value
-                <input
-                  type="text"
-                  required
-                />
-              </label>
-              <label>
-               Motor Timing(in minutes)
-                <input
-                  type="text"
-                  required
-                />
-              </label>
-              <div className="modal-actions">
-                <button type="button" className="cancel-btn" onClick={()=>{setIsPowerOpen(false)}} >
-                  Cancel
-                </button>
-                <button type="submit" className="save-btn">
-                  Update
-                </button>
-              </div>
-
+              <div className="modal device-view-modal">
+                <h2>Edit Device Settings</h2>
+                <form className="device-view-details" onSubmit={handleSubmit}>
+                  <label>
+                    Buzzer Min Value
+                    <input
+                      type="text"
+                      required
+                      name='buzzer_start_value'
+                      value={deviceInput?.buzzer_start_value || ''}
+                      onChange={handleDeviceInputChange}
+                    />
+                  </label>
+                  < label>
+                    Buzzer Watch Time (in minutes)
+                    <input
+                      type="text"
+                      required
+                      name='buzzer_time'
+                      value={deviceInput?.buzzer_time || ''}
+                      onChange={handleDeviceInputChange}
+                    />
+                  </label>
+                  <label>
+                    Feeder Min Value
+                    <input
+                      type="text"
+                      required
+                      name='relay1_start_value'
+                      value={deviceInput?.relay1_start_value || ''}
+                      onChange={handleDeviceInputChange}
+                    />
+                  </label>
+                  <label>
+                  "Feeder Watch Time (in minutes)",
+                    <input
+                      type="text"
+                      required
+                      name='relay1_wait_time'
+                      value={deviceInput?.relay1_time || ''}
+                      onChange={handleDeviceInputChange}
+                    />
+                  </label>
+                  <label>
+                    Feeder Wait Time After Power OFF (in minutes)
+                    <input
+                      type="text"
+                      required
+                      name='relay1_wait_time'
+                      value={deviceInput?.relay1_wait_time || ''}
+                      onChange={handleDeviceInputChange}
+                    />
+                  </label>
+                  <label>
+                    Motor Min Value
+                    <input
+                      type="text"
+                      required
+                      name='relay2_start_value'
+                      value={deviceInput?.relay2_start_value || ''}
+                      onChange={handleDeviceInputChange}
+                    />
+                  </label>
+                  <label>
+                    Motor Timing (in minutes)
+                    <input
+                      type="text"
+                      required
+                      name='relay2_wait_time'
+                      value={deviceInput?.relay2_wait_time || ''}
+                      onChange={handleDeviceInputChange}
+                    />
+                  </label>
+                  <div className="modal-actions">
+                    <button type="button" className="cancel-btn" onClick={() => setIsPowerOpen(false)}>
+                      Cancel
+                    </button>
+                    <button type="submit" className="save-btn">
+                      Update
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
-            
-            </>)
-          }
+          )}
           {isDeviceDetailOpen&&
           (<>
           <div className="modal-overlay">

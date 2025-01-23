@@ -197,7 +197,7 @@ margin: 10px;
     border-radius: 10px;
     width: 280px;
     text-align: left;
-    z-index: 1000;
+    z-index: 2 00;
   }
   .modal-overlay {
     z-index: 1000;

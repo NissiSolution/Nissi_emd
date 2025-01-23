@@ -132,6 +132,14 @@ font-size: 14px;
     border-radius: 20px;
     border: 1px solid #ccc;
 }
+.device-view-modal{
+    width: 500px !important;
+    margin-top: 60px;
+    max-height: 90vh; /* Limit the height of the modal */
+    overflow-y: auto; /* Allow scrolling within the modal if content overflows */
+    overflow: scroll;
+
+}
 .space-bar{
     border:1.2px solid #ccc ;
     font-weight: bolder;
@@ -182,6 +190,9 @@ p{
     padding: 8px;
     font-size: 13px;
 }
+}
+.device-view-modal{
+    height: 80vh;
 }
 .device-view-info .view-img img{
     width: 170px;
