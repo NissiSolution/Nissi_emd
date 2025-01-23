@@ -26,7 +26,10 @@ export default function User() {
         }
     };
     document.onclick = handleDocumentClick;
-
+    const Logout=()=>{
+      localStorage.clear()
+       navigate('/')
+    }
   return (
     <>
     <div className="user-page">
@@ -43,7 +46,7 @@ export default function User() {
                 <div className="edit-user">
                     <p onClick={openModel}>Edit</p>
                     <p onClick={()=>{setIsPassModelOpen(true)}}>Change Password</p>
-                    <p>Logout</p>
+                    <p onClick={()=>{Logout()}}>Logout</p>
                 </div>
             )}
         </div>
@@ -72,7 +75,7 @@ export default function User() {
                 <p>098765432</p>
             </div>
          </div>
-         <div className="user-devices">
+         {/* <div className="user-devices">
 
             <h3>Devices</h3>
     <div className="user-available-cards">
@@ -88,7 +91,7 @@ export default function User() {
        </div>
 
     </div>
-         </div>
+         </div> */}
          </div>
          
     {isModalOpen&&(<>

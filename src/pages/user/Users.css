@@ -1,0 +1,96 @@
+.users-page{
+    display: grid;
+    grid-template-columns: 200px 2fr;
+    grid-template-areas: 'sidebar main' 'sidebar main''footer footer';
+}
+.users-sidebar{
+    grid-area: sidebar;
+}
+.users-main{
+    grid-area: main;
+    padding: 10px;
+}
+.users-footer{
+    grid-area: footer;
+}
+.header-lead{
+    display: flex;
+    align-items: center;
+}
+
+.user-icons{
+    font-size: 60px;
+}
+.users-header{
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.users-table{
+    padding: 10px;
+}
+.users-table table{
+    width: 1000px;
+    border-collapse: collapse;
+    border-radius: 10px;
+        
+}
+.users-table table th,.users-table table td{
+    padding: 10px 20px;
+    text-align: center;
+    border: 1px solid black;
+}
+.add-users-modal{
+    width: 700px !important;
+}
+.action-icons{
+    font-size: 25px;
+    cursor: pointer;
+}
+
+@media only screen and (max-width: 600px) 
+{
+
+    .users-page{
+        display: flex;
+        flex-direction: column;
+    }
+    .user-icons{
+        font-size: 40px;
+    }
+    .users-header{
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .users-table{
+        padding: 5px;
+    }
+    .users-table table{
+        width: fit-content;
+        border-collapse: collapse;
+            
+    }
+    .users-table table th,.users-table table td{
+        padding: 13px;
+        text-align: center;
+    }
+    .users-table table th:nth-child(3){
+        display: none;
+    }
+    .users-table table th:nth-child(4){
+        display: none;
+    }
+    .users-table table tr td:nth-child(3){
+        display: none;
+    }
+    .users-table table tr td:nth-child(4){
+        display: none;
+    }
+    .add-users-modal{
+        width: fit-content !important;
+    }
+    
+} 

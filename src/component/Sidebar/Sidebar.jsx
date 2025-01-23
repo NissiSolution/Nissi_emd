@@ -4,12 +4,18 @@ import { NavLink } from 'react-router-dom'
 import Burger from '../Nav/Burger'
 import { FiLogOut } from "react-icons/fi";
 import { FaRegUserCircle } from "react-icons/fa";
+import { useNavigate } from 'react-router-dom';
 import './Sidebar.css'
 function Sidebar() {
+      const navigate=useNavigate()
       const [hamburgerIsOpen, setHamburgerIsOpen] = useState(false);
       const toggleHamburger = () => {
         setHamburgerIsOpen(!hamburgerIsOpen);
       };
+      const Logout=()=>{
+        localStorage.clear()
+         navigate('/')
+      }
   return (
     <>
     <div className="sidebar">
@@ -18,7 +24,7 @@ function Sidebar() {
           <Burger isOpen={hamburgerIsOpen} />
         </div>
             <img src={icon} alt="icon" className='icon-img'  width='40px' height='40px'/>
-           <p>NissiRnD</p>  
+           <p>Nissi</p>  
         </div>
          <div className={`side-nav ${hamburgerIsOpen ?'nav-burger':''}`}>
           <div className='links'>
@@ -32,10 +38,10 @@ function Sidebar() {
             </div>
             {hamburgerIsOpen&&(<>
               <div className="">
-  <NavLink to='/user'>Profile</NavLink>
+  <NavLink to='/profile'>Profile</NavLink>
 </div>
               <div className="">
-  <p>Logout</p>
+  <p onClick={()=>{Logout()}}>Logout</p>
 </div>
 
             </>
@@ -46,9 +52,9 @@ function Sidebar() {
 
             <section className="logout-section">
             <div className="profile">
-             <NavLink to='/user'><span><FaRegUserCircle /></span>&nbsp;User</NavLink>
+             <NavLink to='/profile'><span><FaRegUserCircle /></span>&nbsp;User</NavLink>
             </div>
-            <div className="logout">
+            <div className="logout" onClick={()=>{Logout()}}>
             <p ><span><FiLogOut /></span> Logout</p>
 
             </div>

@@ -70,7 +70,19 @@ background-color: #fcfefa;
   width: 200px;
   animation: dropdownFadeIn 0.3s ease;
 }
+.admin-main-content{
+  padding: 30px ;
+  display:  flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 
+  gap: 40px;
+}.admin-card1{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  text-align: center;
+  width: 250px;
+  padding:  2.3rem 1rem;
+}
 .dropdown-menu::before {
   content: '';
   position: absolute;
@@ -144,8 +156,9 @@ border-radius: 7px;
     }
     .card p{
       margin: 14px 0;
-      width: 150px;
+      width: fit-content;
       font-weight: bold;
+      
     }
 .dashboard-footer{
   background-color: #333;
@@ -158,6 +171,15 @@ border-radius: 7px;
 @media only screen and (max-width: 600px) {
   .dashboard{
     all:unset;
+  }
+  .admin-main-content{
+    padding: 30px ;
+    display:  flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+  
+    gap: 40px;
   }
   .dashboard-side-bar{
     width: 100%;
@@ -217,8 +239,9 @@ border-radius: 7px;
 
   }
   .card p{
-    margin: 14px 0;
-    width: 150px;
+    font-size: 14px;
+    margin: 13px 0;
+    width: fit-content;
     font-weight: bold;
   }
   .dashboard-footer{

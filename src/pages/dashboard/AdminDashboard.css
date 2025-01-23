@@ -1,0 +1,80 @@
+.admin-dashboard-page{
+    display: grid;
+    grid-template-areas: "sidebar main"
+                         "sidebar main"
+                        "footer footer";    
+                         grid-template-columns: 200px 2fr;
+ /* background-color: var(--primary-bg-color);                     */
+}
+.admin-dashboard-main{
+  grid-area: main;
+}
+.admin-dashboard-sidebar{
+  grid-area: sidebar;
+}
+.admin-dashboard-footer{
+  grid-area: footer;
+}
+.react-icon{
+    font-size: 40px;
+}
+.admin-box{
+    padding: 30px 0 0 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 30px;
+    flex-grow: 1;
+  
+}
+.admin-card{
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    text-align: center;
+    width: 350px;
+    padding:  2.3rem 1rem;
+}
+@media only screen and (max-width: 600px) {
+    .dashboard{
+        all:unset;
+      }
+      .admin-dashboard-side-bar{
+        width: 100%;
+      }
+      .admin-dashboard-page{
+        display: flex;
+        flex-direction: column;}
+      .dashboard-header{
+        all: unset;
+      }
+      .dashboard-header h2{
+        font-size: 18px;
+        padding: 10px;
+    
+      }
+      .dashboard-header >div{
+        margin: 5px 0;
+        display: flex;
+        justify-content: center;
+        justify-content: flex-start;
+        gap: 10px;
+      }
+      .dashboard-header img{
+        width: 60px;
+      }
+      .react-icon{
+        font-size: 30px;
+
+      }
+      .admin-box{
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+      .admin-card{
+        width: 250px;
+      }
+}

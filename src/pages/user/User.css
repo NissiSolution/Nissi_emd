@@ -28,10 +28,10 @@ margin: 10px;
     top: 40px;
     right:20px ;
     padding: 30px 20px;
-    color: black ;
+    color:whitesmoke;
     z-index: 1000;
     animation: dropdownFadeIn 0.3s ease;
-    background-color: rgba(135, 206, 235,0.2);
+    background-color:rgba(0, 9, 99,0.7);
     border-radius: 20px;
 }
 .edit-user p{

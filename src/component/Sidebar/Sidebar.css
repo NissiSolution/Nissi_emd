@@ -16,7 +16,9 @@ a {
     flex-direction: column;
     transition: all 0.3s ease-in-out;
   }
-
+.logout{
+  cursor: pointer;
+}
   /* Sidebar Header */
   .sidebar-header {
     display: flex;

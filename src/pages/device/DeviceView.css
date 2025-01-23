@@ -23,10 +23,30 @@
 }
 .device-view-info{
     /* border: 2px solid black; */
-    padding: 5px;
+    padding:10px 5px 5px 5px;
     display: flex;
-    width: fit-content;
-    gap: 10px;
+    gap: 100px;
+    justify-content: space-around;
+}
+.active-btns{
+    display: flex;
+    gap: 20px;
+    padding: 10px;
+}
+.active-btn{
+    padding:2px 8px ;
+    background-color: gray !important;
+    border-radius: 5px;
+    cursor: pointer;
+
+}
+.offcolor{
+    background-color: green; /* or any color for the active button */
+    color: white;
+    padding:2px 8px ;
+    cursor: pointer;
+    border-radius: 5px;
+
 }
 .device-details{
     padding: 10px;
@@ -34,19 +54,36 @@ p{
     padding: 10px;
 }
 }
+.device-view-header{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-content: center;
+    padding: 8px;
+margin: 10px;
+
+}
+
 .device-status{
     padding: 10px;
     display: flex;
-    flex-wrap: wrap;
-    gap: 30px;
+    gap: 20px;
 }
 .device-status .box{
-  width: 200px;
+  width: 190px;
     padding: 10px;
     background-color: rgba(204, 204, 204,0.3);
     border: 1.5px solid #333;
     text-align: center;
     
+}
+.active-power{
+
+    width: 180px !important;
+}
+.active-power .box-lead{
+    font-size: 12px !important;
 }
 .box-lead{
     text-align: left;
@@ -80,6 +117,10 @@ font-size: 14px;
     color: whitesmoke;
     border-radius: 3px;
 }
+.state-unknown{
+    background-color: #ccc ;
+    color: #000;
+}
 .device-table-details{
     margin-left: 10px;
     margin-top: 40px;
@@ -98,22 +139,42 @@ font-size: 14px;
 }
 .label{
     display: flex;
-    padding: 20px;
+    padding: 20px ;
     width: 600px;
-    justify-content: space-evenly;
+    justify-content: space-between;
     flex-wrap: nowrap;
     gap: 100px;
 }
+.second-label{
+    width: 160px;
+    display: flex;
+    gap: 3px;
+}
+.cen{
+    float: left;
+}
+.img-info{
+    display: flex;
+}
+
 @media only screen and (max-width: 600px) 
 {
 .device-view-page{
     display: flex;
     flex-direction: column;
 }
+.img-info{
+    flex-direction: column;
+    margin-bottom: 30px;
+}
+.meter{
+    all: unset;
+}
 .device-view-info{
     flex-direction: column;
     align-items: flex-start;
-    gap: 10;
+    justify-content: none;
+    gap: 10px;
 }
 .device-details{
     padding: 5px;
