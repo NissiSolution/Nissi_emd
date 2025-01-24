@@ -8,7 +8,7 @@ import { RiLockPasswordLine } from "react-icons/ri";
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 export default function Login() {
-    const navigate = useNavigate();
+        const navigate = useNavigate(); // Ensure useNavigate is correctly used
     const [currentUser , setCurrentUser ] = useState({ email: '', password: '' });
 
     const handleInputChange = (e) => {
@@ -21,28 +21,27 @@ export default function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-
-        if (!currentUser .email) {
+    
+        if (!currentUser.email) {
             alert('Enter the email');
             return;
-        } else if (!currentUser .password) {
+        } else if (!currentUser.password) {
             alert('Enter the password');
             return;
         }
-
+    
         const data = {
             requestType: "authAccount",
-            data: JSON.stringify({ email: currentUser .email, password: currentUser .password }),
+            data: JSON.stringify({ email: currentUser.email, password: currentUser.password }),
         };
-
+    
         try {
             const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
             });
-
-            // Handle response
+    
             if (response.status === 200) {
                 if (response.data === "failure") {
                     alert("Request failed: " + response.data);
@@ -51,26 +50,29 @@ export default function Login() {
                 } else if (response.data === 'email-error') {
                     alert('Invalid Email');
                 } else {
-                    // Assuming response.data contains the user ID
                     const userid = response.data.match(/\d+/)[0];
-                    
-                    const role = await fetchData(userid); // Pass userid to fetchData
-                          
+                    const role = await fetchData(userid);
+    
+    
                     localStorage.setItem("userId", userid);
                     localStorage.setItem("role", role === '1' ? "admin" : "user");
                     localStorage.setItem("auth", true);
+    
                     // Navigate to the appropriate page
-                     // Assuming role is a string
-                role === '1' ? navigate("/admin") : navigate("/dashboard");
+                    role === '1' ? navigate('/admin') : navigate('/dashboard');
                 }
             } else {
                 console.error("Unexpected response code:", response.status);
             }
         } catch (error) {
             console.error("Error during API call:", error);
+            alert("Something went wrong. Please try again later.");
         }
     };
-
+    // function navigateBasedOnRole(role) {
+    //     const route = role === "1" ? "/admin" : "/dashboard";
+    //     navigate(route, { replace: true });
+    //   }
     const fetchData = async (userid) => {
         const data = {
             requestType: 'getUser',
@@ -88,7 +90,6 @@ export default function Login() {
             {
               const role = response.data.role; // Adjust based on actual response structure
               localStorage.setItem('user',response.data.username)
-             console.log(response.data)
               return role
             }
             ;

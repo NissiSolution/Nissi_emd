@@ -31,7 +31,7 @@ function Sidebar() {
          <div className={`side-nav ${hamburgerIsOpen ?'nav-burger':''}`}>
           <div className='links'>
 
-            {role==='admin'&&(
+            {role ==='admin'&&(
               <>
               <div>
               <NavLink to='/admin' activeClassName="active" >Admin</NavLink>

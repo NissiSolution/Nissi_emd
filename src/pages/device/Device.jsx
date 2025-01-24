@@ -80,7 +80,10 @@ export default function Device() {
       console.error(error);
     }
   };
-
+const closePass=()=>{
+  setAddDeviceOpen(false)
+  setAddDevice('')
+}
   const getActiveDeviceDetails = async (total) => {
     const activeDevices = [];
     try {
@@ -249,7 +252,7 @@ export default function Device() {
                     />
                   </label>
                   <div className="modal-actions">
-                    <button type="button" className="cancel-btn" onClick={() => { setAddDeviceOpen(false),setAddDevice('') }}>
+                    <button type="button" className="cancel-btn" onClick={() => { closePass() }}>
                       Cancel
                     </button>
                     <button type="submit" className="save-btn">

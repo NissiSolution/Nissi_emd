@@ -73,10 +73,12 @@
         border-collapse: collapse;
             
     }
+  
     .users-table table th,.users-table table td{
-        padding: 13px;
+        padding: 5px;
         text-align: center;
     }
+   
     .users-table table th:nth-child(3){
         display: none;
     }

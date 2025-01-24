@@ -524,7 +524,7 @@ document.onclick = handleDocumentClick;
                     />
                   </label>
                   <label>
-                  "Feeder Watch Time (in minutes)",
+                  Feeder Watch Time (in minutes)
                     <input
                       type="text"
                       required
@@ -613,7 +613,8 @@ document.onclick = handleDocumentClick;
                 />
               </label>
               <div className="modal-actions">
-                <button type="button" className="cancel-btn" onClick={()=>{SetIsDeviceDetailOpen(false),setDeviceDetails('')}} >
+                <button type="button" className="cancel-btn" onClick={()=>{SetIsDeviceDetailOpen(false)
+                  setDeviceDetails('')}} >
                   Cancel
                 </button>
                 <button type="submit" className="save-btn">

@@ -1,9 +1,10 @@
 import React,{useState} from 'react'
-import './user.css'
+import './User.css'
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Sidebar from '../../component/Sidebar/Sidebar'
 import Footer from '../../component/footer/Footer'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 export default function User() {
@@ -14,6 +15,7 @@ export default function User() {
     const [isPassModelOpen,setIsPassModelOpen]=useState(false)
     const userid=localStorage.getItem('userId')
     const [password,setPassword]=useState({current:"",newPassword:"",confirmPassword:""})
+    const navigate=useNavigate()
     const openModel=()=>{
         setIsModalOpen(true)
     }
@@ -117,7 +119,7 @@ const handleEditSubmit = async (e) => {
 
   const handlePasswordSubmit=async(e)=>{
     e.preventDefault();
-    if(password.newPassword !== password.newPassword)
+    if(password.newPassword !== password.confirmPassword)
     {
      return alert('check the password')
     }
@@ -140,11 +142,15 @@ const handleEditSubmit = async (e) => {
   
         if (response.status === 200) {
         
-  
+          if(response.data)
+          {
             alert(response.data)
             setPassword('')
             closeModel(); // Close the modal after successful update
-  
+          }
+          else{
+            alert('failure')
+          }
          
   
         }
@@ -181,7 +187,7 @@ const handleEditSubmit = async (e) => {
          <div className="user-details">
             <div className="user-box">
                 <p>UserName</p>
-                <p>{user?.username||name}</p>
+                <p>{user?.username||'name'}</p>
             </div>
         
             <div className="user-box">
@@ -319,7 +325,8 @@ const handleEditSubmit = async (e) => {
               </label>
 
                 <div className="modal-actions">
-            <button type="button" className="cancel-btn" onClick={()=>{setIsPassModelOpen(false), setPassword('') }} >
+            <button type="button" className="cancel-btn" onClick={()=>{setIsPassModelOpen(false)
+                setPassword('') }} >
                   Cancel
                 </button>
                 <button type="submit" className="save-btn">
