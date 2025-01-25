@@ -11,6 +11,7 @@ background-color: #fcfefa;
     display: grid;
     grid-template-areas: "sidebar main"
                          "sidebar main"
+                         "sidebar main"
                          "footer footer";    
                          grid-template-columns: 200px 2fr;
  /* background-color: var(--primary-bg-color);                     */

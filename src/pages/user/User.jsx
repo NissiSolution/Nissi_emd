@@ -295,6 +295,7 @@ const handleEditSubmit = async (e) => {
                   type="password"
                   name='current'
                   required
+                  minLength={'8'}
                   value={password.current||''}
                   onChange={handleInputChange}
 
@@ -307,6 +308,7 @@ const handleEditSubmit = async (e) => {
                   type="password"
                   name='newPassword'
                   required
+                  minLength={'8'}
                   value={password.newPassword||''}
                   onChange={handleInputChange}
 
@@ -319,6 +321,7 @@ const handleEditSubmit = async (e) => {
                   type="password"
                   name='confirmPassword'
                   required
+                  minLength={'8'}
                   value={password.confirmPassword||''}
                   onChange={handleInputChange}
                 />

@@ -207,6 +207,7 @@ const closePass=()=>{
           key={dev.deviceId}
           className="card active-card"
           onClick={() => {
+            window.scrollTo(0, 0)
             navigate(`/devices/${dev.deviceId}`, {
               state: { deviceData: dev },
             });

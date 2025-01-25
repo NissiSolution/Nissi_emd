@@ -236,12 +236,15 @@ export default function Users() {
                     <label>
                       Phone:
                       <input type="text" required 
+                    
                       value={currentUser?.phone || ""}
                       onChange={(e) => setCurrentUser({ ...currentUser,phone: e.target.value })}/>
                     </label>
                     <label>
                       Password:
-                      <input type="password" required  value={currentUser?.password || ""}
+                      <input type="password" required    
+                      minLength={'8'}
+                      value={currentUser?.password || ""}
                       onChange={(e) => setCurrentUser({ ...currentUser,password: e.target.value })}/>
                     </label>
                     <div className="modal-actions">
@@ -312,6 +315,7 @@ export default function Users() {
     <input
       type="password"
       value={currentUser?.password }
+      minLength={'8'}
       onChange={(e) => setCurrentUser({ ...currentUser, password: e.target.value })}
       required={isPasswordVisible}
     />

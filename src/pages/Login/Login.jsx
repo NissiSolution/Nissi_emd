@@ -5,7 +5,6 @@ import tech from '../../assets/technology.png'
 import left from '../../assets/left.jpg'
 import { CgProfile } from "react-icons/cg";
 import { RiLockPasswordLine } from "react-icons/ri";
-import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
 export default function Login() {
         const navigate = useNavigate(); // Ensure useNavigate is correctly used
@@ -59,7 +58,7 @@ export default function Login() {
                     localStorage.setItem("auth", true);
     
                     // Navigate to the appropriate page
-                    navigate(role === '1' ? '/admin' : '/dashboard', { replace: true });
+                    navigate(role === '1' ? '/main' : '/dashboard', { replace: true });
                 }
             } else {
                 console.error("Unexpected response code:", response.status);
@@ -124,7 +123,7 @@ export default function Login() {
             <div className='wrapper'>
                 <div className="icon"> <RiLockPasswordLine />
                 </div>
-            <input type="password" required id='password' name='password' value={currentUser.password||''} placeholder="Enter the password" onChange={handleInputChange} />
+            <input type="password" required id='password' minLength={'8'} name='password' value={currentUser.password||''} placeholder="Enter the password" onChange={handleInputChange} />
 
             </div>
             {/* <div className="forgot-password">

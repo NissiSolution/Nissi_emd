@@ -380,14 +380,14 @@ document.onclick = handleDocumentClick;
             <div className="active-power box">
               <p className="box-lead">Active PowerMaxDemand</p>
               <span className="box-sub-lead">
-                {device&&parseFloat(device.act_pwr_mxd).toFixed(1)|| 0.0}
+                {device&&parseFloat(device.act_pwr_mxd).toFixed(2)|| 0.0}
                 <span>Kw</span>
               </span>
             </div>
             <div className="active-power box">
               <p className="box-lead">ApparentPowerMaxDemand</p>
               <span className="box-sub-lead">
-                {device&&parseFloat(device.kva_mxd|| 0).toFixed(1)|| 0.0}
+                {device&&parseFloat(device.kva_mxd|| 0).toFixed(2)|| 0.0}
                 <span>Kw</span>
               </span>
             </div>
