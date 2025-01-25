@@ -9,6 +9,8 @@ import { TbDeviceAnalytics } from "react-icons/tb";
 import { TiUserAdd } from "react-icons/ti";
 import { useNavigate } from 'react-router-dom'
 export default function AdminDashboard() {
+  const user=localStorage.getItem('user')
+
   const navigate=useNavigate()
   return (
     <>
@@ -24,7 +26,7 @@ export default function AdminDashboard() {
              <img src={welcome} alt="Welcome" />
              <h2>
                Welcome Back, <br/>
-               Admin
+               {user}
              </h2>
              </div>
       </div>

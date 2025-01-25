@@ -36,6 +36,9 @@
     border-radius: 10px;
         
 }
+.users-view{
+    width: 500px !important;
+}
 .users-table table th,.users-table table td{
     padding: 10px 20px;
     text-align: center;
@@ -43,6 +46,14 @@
 }
 .add-users-modal{
     width: 700px !important;
+}
+.password-check{
+    all: unset !important;
+    padding: 10px;
+    text-align: center;
+}
+.password-check input{
+    width: 40px;
 }
 .action-icons{
     font-size: 25px;

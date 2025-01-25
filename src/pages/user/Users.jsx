@@ -14,8 +14,12 @@ export default function Users() {
   const [viewIsOpen, setViewIsOpen] = useState();
   const [currentUser, setCurrentUser] = useState();
   const [users, setUsers] = useState();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const editModel = (user = {}, Id = null) => {
-    setCurrentUser(user);
+    setCurrentUser({
+      ...user,
+      password: "" // Clear the password when opening the edit modal
+    });
     setEditId(Id);
     setEditOpen(true);
   };
@@ -30,6 +34,7 @@ export default function Users() {
     
   };
   const closeModel = () => {
+
     setCurrentUser({}); 
 
     setIsAddOpen(false);
@@ -57,11 +62,11 @@ export default function Users() {
   };
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, [editId]);
   // console.log(users);
   const handleEditSubmit = async (e) => {
     e.preventDefault();
-  
+
     const updatedUser = {
       requestType: "updateUser",
       data: JSON.stringify({
@@ -70,6 +75,7 @@ export default function Users() {
         designation: currentUser.designation,
         company: currentUser.company,
         email: currentUser.email,
+        password: isPasswordVisible ? currentUser.password : undefined, 
         phone: currentUser.phone,
         active:'1',
         updatedOn: Date.now()
@@ -90,8 +96,9 @@ export default function Users() {
           {
             alert("User updated successfully!");
             setEditOpen(false);
+           await fetchUser()// Close the modal after successful update
+
             currentUser('')
-            fetchUser()// Close the modal after successful update
           }
           else{
             alert('failure')
@@ -127,9 +134,10 @@ export default function Users() {
       });
   
       if (response.status === 200) {
+        await fetchUser(); // Refresh the users list
+         setIsPasswordVisible(false)
         alert("User added successfully!");
         setIsAddOpen(false);
-        fetchUser(); // Refresh the users list
       }
     } catch (error) {
       console.error("Error adding user:", error);
@@ -290,19 +298,40 @@ export default function Users() {
                       value={currentUser?.phone || ""}
                       onChange={(e) => setCurrentUser({ ...currentUser,phone: e.target.value })}/>
                     </label>
-                 
+                    <label className="password-check">
+  <input
+    type="checkbox"
+    checked={isPasswordVisible||false}
+    onChange={(e) => setIsPasswordVisible(e.target.checked)}
+  />
+  Change Password
+</label>
+{isPasswordVisible && (
+  <label >
+    Password:
+    <input
+      type="password"
+      value={currentUser?.password }
+      onChange={(e) => setCurrentUser({ ...currentUser, password: e.target.value })}
+      required={isPasswordVisible}
+    />
+  </label>
+)}
+
                     <div className="modal-actions">
                       <button
                         type="button"
                         className="cancel-btn"
                         onClick={() => {
-                          setEditOpen(false);
+                          setEditOpen(false)
+         setIsPasswordVisible(false)
+
                         }}
                       >
                         Cancel
                       </button>
                       <button type="submit" className="save-btn">
-                        Save
+                        Update
                       </button>
                     </div>
                   </form>
@@ -340,7 +369,7 @@ export default function Users() {
                         setViewIsOpen(false);
                       }}
                     >
-                      Cancel
+                      Close
                     </button>
                   </div>
                 </div>

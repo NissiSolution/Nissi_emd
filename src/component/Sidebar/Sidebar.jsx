@@ -1,5 +1,5 @@
 import React,{useState} from 'react'
-import icon from '../../assets/favicon[1]-3.png'
+import icon from '../../assets/logo.png'
 import { NavLink } from 'react-router-dom'
 import Burger from '../Nav/Burger'
 import { FiLogOut } from "react-icons/fi";
@@ -25,7 +25,7 @@ function Sidebar() {
 <div className="burger-list" onClick={toggleHamburger}>
           <Burger isOpen={hamburgerIsOpen} />
         </div>
-            <img src={icon} alt="icon" className='icon-img'  width='40px' height='40px'/>
+            <img src={icon} alt="icon" className='icon-img'  />
            <p>Nissi</p>  
         </div>
          <div className={`side-nav ${hamburgerIsOpen ?'nav-burger':''}`}>
@@ -34,7 +34,7 @@ function Sidebar() {
             {role ==='admin'&&(
               <>
               <div>
-              <NavLink to='/admin' activeClassName="active" >Admin</NavLink>
+              <NavLink  to="/main" activeClassName="active" >Admin</NavLink>
   
               </div>
               </>

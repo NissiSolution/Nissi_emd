@@ -16,7 +16,7 @@
 .device-view-main .device-view-info .view-img img{
     width: 280px;
     height: 200px;
-     object-fit: cover;
+    object-fit: contain;
 }
 .device-view-main{
     padding: 10px;

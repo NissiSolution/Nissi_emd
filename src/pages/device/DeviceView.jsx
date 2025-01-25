@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react'
 import axios from 'axios'
-import img from '../../assets/asset3.png'
+import img from '../../assets/asset3.jpg'
 import './DeviceView.css'
 import { useParams ,useLocation } from 'react-router-dom'
 import ReactSpeedometer from "react-d3-speedometer"

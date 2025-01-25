@@ -59,7 +59,7 @@ export default function Login() {
                     localStorage.setItem("auth", true);
     
                     // Navigate to the appropriate page
-                    role === '1' ? navigate('/admin') : navigate('/dashboard');
+                    navigate(role === '1' ? '/admin' : '/dashboard', { replace: true });
                 }
             } else {
                 console.error("Unexpected response code:", response.status);
@@ -127,16 +127,16 @@ export default function Login() {
             <input type="password" required id='password' name='password' value={currentUser.password||''} placeholder="Enter the password" onChange={handleInputChange} />
 
             </div>
-            <div className="forgot-password">
+            {/* <div className="forgot-password">
                 <p>Forgot Your Password?</p>
-              </div>
+              </div> */}
               <button type="submit" className="login-button">
                 Login
               </button>
         </form>
-        <div className="signup-link">
+        {/* <div className="signup-link">
         <p>Don't have an account? <Link to='/signup'>SignUp</Link></p>
-        </div>
+        </div> */}
     </div>             </div>
              </div>
         </main>

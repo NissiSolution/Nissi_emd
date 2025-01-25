@@ -14,6 +14,7 @@ export default function Device() {
   const navigate = useNavigate();
   const role = localStorage.getItem('role');
   const userid = localStorage.getItem('userId');
+  const [loading, setLoading] = useState(true);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -38,8 +39,8 @@ export default function Device() {
       if (response.status === 200) {
         if(response.data ==='device-added')
         {
-          alert('Device added successfully');
           addDevice('')
+          alert('Device added successfully');
           addDeviceOpen(false)
         }
         else{
@@ -50,6 +51,10 @@ export default function Device() {
           if(response.data==="device-exists")
           {
             alert("device-exists")
+            addDevice('')
+
+          addDeviceOpen(false)
+            
 
           }
           else{
@@ -81,8 +86,8 @@ export default function Device() {
     }
   };
 const closePass=()=>{
-  setAddDeviceOpen(false)
   setAddDevice('')
+  setAddDeviceOpen(false)
 }
   const getActiveDeviceDetails = async (total) => {
     const activeDevices = [];
@@ -123,11 +128,14 @@ const closePass=()=>{
     } catch (error) {
       console.error("Error during API call:", error);
     }
+    finally {
+      setLoading(false); // Stop loading
+    }
   };
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [addDevice]);
 
   useEffect(() => {
     const total = availableDevice?.map(res => res.deviceId);
@@ -189,28 +197,42 @@ const closePass=()=>{
               <>
                 <h3>Active Devices</h3>
                 <div className="current-statue-card">
-                  {active && active.map(dev => (
-                    <div className="card active-card" onClick={() => {
-                      window.scrollTo(0, 0);
-                      navigate(`/devices/${dev.deviceId}`, {
-                        state: {
-                          deviceData: dev,
-                        },
-                      });
-                    }}>
-                      <p>Device Id: {dev.deviceId}</p>
-                      <p>Device Name: {dev.device_name}</p>
-                      <p>Device Location: {dev.device_location}</p>
-                      <div className="active-status"> <HiStatusOnline className='react-icon' /></div>
-                    </div>
-                  ))}
-                </div>
+    {loading ? (
+      // Show loader while waiting for devices
+      <div className="loader">Loading active devices...</div>
+    ) : active?.length > 0 ? (
+      // Render active devices if available
+      active.map((dev) => (
+        <div
+          key={dev.deviceId}
+          className="card active-card"
+          onClick={() => {
+            navigate(`/devices/${dev.deviceId}`, {
+              state: { deviceData: dev },
+            });
+          }}
+        >
+          <p>Device Id: {dev.deviceId}</p>
+          <p>Device Name: {dev.device_name}</p>
+          <p>Device Location: {dev.device_location}</p>
+          <div className="active-status">
+            <HiStatusOnline className="react-icon" />
+          </div>
+        </div>
+      ))
+    ) : (
+      // Empty state when no active devices are available
+      <div className="empty-state">
+        <p>No active devices available.</p>
+      </div>
+    )}
+  </div>
               </>
             )}
             <div className="available-card">
               <h3>Available Devices</h3>
               <div className="available-cards">
-                {availableDevice && availableDevice.map(dev => (
+                {availableDevice && availableDevice?.map(dev => (
                   <div className="card" onClick={() => {
                     window.scrollTo(0, 0);
                     navigate(`/devices/${dev.deviceId}`, {
