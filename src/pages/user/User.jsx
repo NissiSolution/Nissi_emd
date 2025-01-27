@@ -72,7 +72,7 @@ export default function User() {
   useEffect(()=>{
 fetchUser()
   },[userid])
-console.log(user);
+// console.log(user);
 const handleEditSubmit = async (e) => {
   e.preventDefault();
   const updatedData = {

@@ -7,7 +7,9 @@ import ReactSpeedometer from "react-d3-speedometer"
 import Sidebar from '../../component/Sidebar/Sidebar'
 import Footer from '../../component/footer/Footer'
 import { BsThreeDotsVertical } from "react-icons/bs";
-
+import { format } from 'date-fns';
+import ReactLoading from 'react-loading';
+import { CSVLink } from "react-csv";
 export default function DeviceView() {
   let {deviceId}=useParams();
   const location = useLocation();
@@ -21,6 +23,11 @@ export default function DeviceView() {
   const [device,setDevice]=useState()
   const[RS485,setRS485]=useState()
   const[lora,setLora]=useState()
+  const [exportIsOpen,setExportIsOpen]=useState(false)
+  const [exportData,setExportData]=useState([])
+  const [loading,setLoading]=useState(false)
+const [customDate,setCustomDate]=useState({})
+const [disable,setDisable]=useState(true)
   const [deviceInput,setDeviceInput]=useState({
     deviceId: '',
     buzzer_start_value:'',
@@ -32,7 +39,7 @@ export default function DeviceView() {
     relay2_wait_time: '',
     
   })
-  
+  const [dropdownValue,setDropdownValue]=useState('')
   const [presentPower,setPresentPower]=useState()
   const handleDeviceChange = (e) => {
     const { name, value } = e.target;
@@ -41,6 +48,25 @@ export default function DeviceView() {
       [name]: value,
     }));
   }
+  const handleStartDateChange = (e) => {
+    const selectedStartDate = e.target.value;
+
+    // Calculate the end date as 31 days later
+    const newEndDate = new Date(selectedStartDate);
+    newEndDate.setDate(newEndDate.getDate() + 5);
+    setCustomDate({
+      startDate: selectedStartDate,
+      endDate: newEndDate.toISOString().split("T")[0], // Set to ISO format (yyyy-mm-dd)
+    });
+  };
+
+  // Handler for end date change
+  const handleEndDateChange = (e) => {
+    setCustomDate({
+      ...customDate,
+      endDate: e.target.value
+    });
+  };
   const handlePowerDeviceDetails = () => {
     if (currentDevice) {
       setDeviceInput({
@@ -57,7 +83,7 @@ export default function DeviceView() {
     }
     setIsPowerOpen(true);
   };
-  console.log(deviceInput);
+  // console.log(deviceInput);
   
 
   const handleDeviceInputChange = (e) => {
@@ -288,10 +314,139 @@ document.onclick = handleDocumentClick;
       console.error("Error updating device settings:", error);
     }
   };
+  const calculateTotalKW = (item) => {
+    // Implement your calculation logic here
+    // For example, if you have other fields like 'power' and 'time', you can calculate it as follows:
+    const power = parseFloat(item.t_kw) || 0; // Replace with actual field names
+    const time = parseFloat(item.time) || 1; // Avoid division by zero
+    return power / time; // Example calculation
+};
+ const getTime =async()=>{
+  try { 
+    let data;
+    setLoading(true)
+    const today = new Date(); 
+    const date = format(today, 'dd');
+    const year = format(today, 'yyyy'); 
+    const month = format(today, 'MM');
 
+    if (dropdownValue === 'today') {
+      data = {
+        requestType: 'getTodayData',
+        data: JSON.stringify({
+          deviceId:deviceId,
+          date: date,
+          month: month,
+          year: year,
+        }),
+      };
+      // console.log(data);
+      
+    } else if (dropdownValue === 'thisweek') {
+      data = {
+        requestType: 'getThisWeek',
+        data: JSON.stringify({
+          deviceId: deviceId,
+        }),
+      };
+      // console.log(data);
+    }
+     else if (dropdownValue === 'lastweek') {
+      data = {
+        requestType: 'getPreviousWeek',
+        data: JSON.stringify({
+          deviceId: deviceId,
+        }),
+      };
+      // console.log(data);
+    }
+     else if (dropdownValue === 'lastprevious') {
+      data = {
+        requestType: 'getYesterday',
+        data: JSON.stringify({
+          deviceId: deviceId,
+        }),
+      };
+      // console.log(data);
+    }
+      // else if (dropdownValue === 'thismonth') {
+    //   data = {
+    //     requestType: 'getThisMonth',
+    //     data: JSON.stringify({
+    //       deviceId: deviceId,
+    //     }),
+    //   };
+    //   console.log(data);
+    // }   
+    else if (dropdownValue==='custom') {
+      const start = customDate.startDate + ' 00:00:00'; // Start date from your state
+      const end = customDate.endDate + ' 23:59:59'; // End date from your state
+
+      if (start && end) {
+        data = {
+          requestType: 'custom',
+          data: JSON.stringify({
+            deviceId: deviceId,
+            start: start,
+            end: end,
+          }),
+        };
+      // console.log(data);
+
+      } 
+    }else{
+      return;
+    }
+        
+ 
+    const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
+
+    if (response.status === 200) {
+      if(response.data)
+      {
+        const preparedData = response.data.map(item => {
+          const tim = new Date(item.time * 1000); // Convert UNIX timestamp to Date object
+          const formattedTime = format(tim, 'dd-mm-yyyy HH:mm:ss'); // Format the date
+      
+          return {
+              ...item,
+              time: formattedTime, 
+          };
+        
+        })
+        setExportData(preparedData)
+
+        if(response.data==='failure')
+        {
+          alert('data fetching Error')
+          setDisable(true)
+          setCustomDate('')
+          setDropdownValue('')
+        }
+        else{
+          setDisable(false)
+        }
+        // setExportIsOpen(false);
+      }
+      
+    }
+  } catch (error) {
+    setDisable(true);
+    console.error("Error  :", error.response);
+  }
+  finally {
+    setLoading(false); // Ensure loading is set to false after the request
+}
+
+ }
   useEffect(() => {
     getCurrentData();
     getCurrentDeviceDetails()
+  
     const intervalId = setInterval(() => {
       getCurrentData();
     }, 2000);  
@@ -304,7 +459,8 @@ document.onclick = handleDocumentClick;
     if (device) {
       setLora(device.lora_status);
       setRS485(device.rs485_status);
-    
+
+     
       if(device.t_kva > 0 && device.t_kw > 0){
             setPresentPower(parseFloat(device?.t_kw)/parseFloat(device?.t_kva)||'0')
       }
@@ -313,9 +469,44 @@ document.onclick = handleDocumentClick;
       }
     }
   }, [device]);  
+// console.log(time);
 
-  
-  
+// console.log(device);
+// const date = new Date(time * 1000);
+// const date = moment.unix(time).format("MM/DD/YYYY HH:mm:ss A");
+// console.log(customDate);
+const closeModel=()=>{
+  setLoading(false)
+  setCustomDate('')
+  setDropdownValue('')
+  setExportIsOpen(false)
+}
+
+const headers = [
+  { label: "ID", key: "id" },
+  { label: "Device ID", key: "deviceId" },
+  { label: "Voltage R-N", key: "v1N" },
+  { label: "Voltage Y-N", key: "v2N" },
+  { label: "Voltage B-N", key: "v3N" },
+  { label: "Voltage R-Phase", key: "i1" },
+  { label: "Voltage Y-Phase", key: "i2" },
+  { label: "Voltage B-Phase", key: "i3" },
+  { label: "Frequency", key: "freq" },
+  { label: "Total Active Power", key: "t_kw" },
+  { label: "Total Reactive Power", key: "t_kvar" },
+  { label: "Total Apparent Power", key: "t_kva" },
+  { label: " Active Power Max Demand", key: "act_pwr_mxd" },
+  { label: "Apparent Power Max Demand", key: "kva_mxd" },
+  { label: "Total Active Energy", key: "t_act_energy" },
+  { label: "RY Voltage", key: "ryV" },
+  { label: "YB Voltage", key: "ybV" },
+  { label: "BR Voltage", key: "brV" },
+  { label: "Total Apparent Energy", key: "t_aprnt_engy" },
+  { label: "Time", key: "time" },
+  { label: "RS485 Status", key: "rs485_status" },
+  { label: "LoRa Status", key: "lora_status" }
+]
+
   return (
     <>
     <div className="device-view-page">
@@ -324,7 +515,7 @@ document.onclick = handleDocumentClick;
       </div>
       <div className="device-view-main">
         <div className="device-view-header  " onClick={(e) => e.stopPropagation()}>
-        <h2>{deviceData.device_name}</h2>
+        <h2>{currentDevice?.device_name}</h2>
   <div className="user-action   " onClick={handleToggleDropdown}>
                 <BsThreeDotsVertical />
             </div>
@@ -332,6 +523,7 @@ document.onclick = handleDocumentClick;
                 <div className="edit-user device-action">
                     <p onClick={()=>handleEditDeviceDetails()}>Device Details</p>
                     <p onClick={()=>handlePowerDeviceDetails()}>Power Max</p>
+                    <p onClick={()=>{setExportIsOpen(true)}}   >Export</p>
                 </div>
             )}
         </div>
@@ -412,7 +604,7 @@ document.onclick = handleDocumentClick;
             </div>
             <div className="label">
                <div className="first-label">Voltage B-N</div>
-               <div className="second-label"><span className="cen">:</span> {device?.v2N||0.00} V</div>
+               <div className="second-label"><span className="cen">:</span> {device?.v3N||0.00} V</div>
             </div>
             <div className='space-bar'></div>
             <div className="label">
@@ -461,7 +653,7 @@ document.onclick = handleDocumentClick;
             </div>
             <div className="label">
                <div className="first-label">Present Power Factor</div>
-               <div className="second-label"><span className="cen">:</span>{parseFloat(presentPower).toFixed(2)||0}</div>
+               <div className="second-label"><span className="cen">:</span>{presentPower?parseFloat(presentPower).toFixed(2):0}</div>
             </div>
             <div className='space-bar'></div>
 
@@ -575,6 +767,83 @@ document.onclick = handleDocumentClick;
               </div>
             </div>
           )}
+                 {exportIsOpen && (
+    <div className={`modal-overlay ${exportIsOpen ? 'active' : ''}`}>
+        <div className={`modal ${exportIsOpen ? 'active' : ''}`}>
+            <h3>Export</h3>
+            <br />
+            <form onSubmit={getTime} className="export">
+                <div>
+                    <h4>Select Duration</h4>
+                    <label htmlFor="">
+                        <select
+                            required
+                            onChange={(e) => setDropdownValue(e.target.value)}
+                        >
+                            <option value="" disabled>Select the value</option>
+                            <option value="today">Today</option>
+                            <option value="lastprevious">Last Day</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </label>
+
+                    {dropdownValue === 'custom' && (
+                        <div className='custom'>
+                            <h4>Pick a date range</h4>
+                            <label htmlFor="startdate">
+                                Start Date
+                                <input
+                                    type="date"
+                                    name="startDate"
+                                    id="startDate"
+                                    value={customDate.startDate}
+                                    onChange={handleStartDateChange}
+                                />
+                            </label>
+
+                            <label htmlFor="enddate">
+                                End Date
+                                <input
+                                    type="date"
+                                    name="endDate"
+                                    id="endDate"
+                                    value={customDate.endDate}
+                                    onChange={handleEndDateChange}
+                                    min={customDate.startDate}
+                                    max={customDate?.endDate}
+                                />
+                            </label>
+                        </div>
+                    )}
+
+                    {loading && (
+                        <div className="" style={{ display: 'flex', justifyContent: 'center' }}>
+                            <ReactLoading type={'spin'} color={'#00f'} height={'30%'} width={'30%'} />
+                        </div>
+                    )}
+
+                    {dropdownValue && (
+                        <button type="button" onClick={getTime} className="save-btn load" disabled={loading}>
+                            Load
+                        </button>
+                    )}
+                </div>
+
+                <div className="modal-actions">
+                    <button type="button" className="cancel-btn" onClick={closeModel}>
+                        Cancel
+                    </button>
+                    <button type="submit" className={` ${disable ? 'disable' : 'save-btn'}`} disabled={disable}>
+                        <CSVLink data={exportData} headers={headers} filename={`emd-device-${dropdownValue}.csv`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                            Download
+                        </CSVLink>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+)}
+        
           {isDeviceDetailOpen&&
           (<>
           <div className="modal-overlay">
