@@ -28,6 +28,7 @@ export default function DeviceView() {
   const [loading,setLoading]=useState(false)
 const [customDate,setCustomDate]=useState({})
 const [disable,setDisable]=useState(true)
+const [time,setTime]=useState()
   const [deviceInput,setDeviceInput]=useState({
     deviceId: '',
     buzzer_start_value:'',
@@ -410,7 +411,7 @@ document.onclick = handleDocumentClick;
       {
         const preparedData = response.data.map(item => {
           const tim = new Date(item.time * 1000); // Convert UNIX timestamp to Date object
-          const formattedTime = format(tim, 'dd-mm-yyyy HH:mm:ss'); // Format the date
+          const formattedTime = format(tim, 'dd-MM-yyyy hh:mm:ss a'); // Format the date
       
           return {
               ...item,
@@ -459,8 +460,9 @@ document.onclick = handleDocumentClick;
     if (device) {
       setLora(device.lora_status);
       setRS485(device.rs485_status);
-
-     
+      const tim = new Date(device?.time * 1000); // Convert UNIX timestamp to Date object
+      const formattedTime = format(tim, 'dd-MM-yyyy hh:mm:ss a');
+     setTime(formattedTime)
       if(device.t_kva > 0 && device.t_kw > 0){
             setPresentPower(parseFloat(device?.t_kw)/parseFloat(device?.t_kva)||'0')
       }
@@ -550,16 +552,24 @@ const headers = [
     startColor="green"
     segments={10}  
     endColor="red"
-    textColor={'#333'}
+    textColor={'#fff'}
     currentValueText={`${meterValue}  ${type === '0' ? 'Active Power Max Demand' : 'Apparent Power Max Demand'}    `}
      forceRender={true}
   />
             </div>
           </div>
+          <div className="active-btn-time">
           <div className="active-btns">
   <div className={`${type === '0'?'offcolor':'active-btn'} ht `} onClick={()=>{buttonChange('0')}}>LT</div>
    <div className={`${type === '1'?'offcolor':'active-btn'} ht `} onClick={()=>{buttonChange('1')}}>HT</div>
  </div>
+ <div className="time"> 
+ <span>UpdatedTime :</span> <span>
+ {time||'unknown'}
+  </span> 
+ </div>
+          </div>
+  
           <div className="device-status">
             <div className="active box">
              <div className="box-lead"> RS485 Status</div>
@@ -596,60 +606,60 @@ const headers = [
       
             <div className="label">
                <div className="first-label">Voltage R-N</div>
-               <div className="second-label"> <span className="cen">:</span> {device?.v1N||0.00}V</div>
+               <div className="second-label"> <span className="cen">:</span> {device?.v1N||0.00} <span className="side-value">V</span></div>
             </div>
             <div className="label">
                <div className="first-label"> Voltage Y-N</div>
-               <div className="second-label"><span className="cen">:</span> {device?.v2N||0.00} V</div>
+               <div className="second-label"><span className="cen">:</span> {device?.v2N||0.00} <span className="side-value">V</span></div>
             </div>
             <div className="label">
                <div className="first-label">Voltage B-N</div>
-               <div className="second-label"><span className="cen">:</span> {device?.v3N||0.00} V</div>
+               <div className="second-label"><span className="cen">:</span> {device?.v3N||0.00} <span className="side-value">V</span></div>
             </div>
             <div className='space-bar'></div>
             <div className="label">
                <div className="first-label">Voltage R-Y</div>
-               <div className="second-label"><span className="cen">:</span> {device?.ryV||0.00}V</div>
+               <div className="second-label"><span className="cen">:</span> {device?.ryV||0.00}<span className="side-value">V</span></div>
             </div>
             <div className="label">
                <div className="first-label"> Voltage Y-B</div>
-               <div className="second-label"><span className="cen">:</span> {device?.ryV||0.00} V</div>
+               <div className="second-label"><span className="cen">:</span> {device?.ryV||0.00} <span className="side-value">V</span></div>
             </div>
             <div className="label">
                <div className="first-label">Voltage B-R</div>
-               <div className="second-label"><span className="cen">:</span> {device?.brV||0.00} V</div>
+               <div className="second-label"><span className="cen">:</span> {device?.brV||0.00} <span className="side-value">V</span></div>
             </div>
             <div className='space-bar'></div>
 
             <div className="label">
                <div className="first-label">Voltage R-Phase</div>
-               <div className="second-label"><span className="cen">:</span> { parseFloat(device?.i1).toFixed(1)||0.00} A</div>
+               <div className="second-label"><span className="cen">:</span> { parseFloat(device?.i1).toFixed(1)||0.00}<span className="side-value">A</span></div>
             </div>
             <div className="label">
                <div className="first-label"> Voltage Y-Phase</div>
-               <div className="second-label"><span className="cen">:</span> { parseFloat(device?.i2).toFixed(1)||0.00} A</div>
+               <div className="second-label"><span className="cen">:</span> { parseFloat(device?.i2).toFixed(1)||0.00} <span className="side-value">A</span></div>
             </div> 
             <div className="label">
                <div className="first-label">Voltage B-Phase</div>
-               <div className="second-label"><span className="cen">:</span>{ parseFloat(device?.i3).toFixed(1)||0.00} A</div>
+               <div className="second-label"><span className="cen">:</span>{ parseFloat(device?.i3).toFixed(1)||0.00} <span className="side-value">A</span></div>
             </div>
             <div className='space-bar'></div>
 
             <div className="label">
                <div className="first-label">Frequency</div>
-               <div className="second-label"><span className="cen">:</span> {device?.freq||0.00}Hz</div>
+               <div className="second-label"><span className="cen">:</span> {device?.freq||0.00}<span className="side-value">Hz</span></div>
             </div>
             <div className="label">
                <div className="first-label">Total Active Power</div>
-               <div className="second-label"><span className="cen">:</span> {device?.t_kw||0.00} kW</div>
+               <div className="second-label"><span className="cen">:</span> {device?.t_kw||0.00} <span className="side-value">kW</span></div>
             </div>
             <div className="label">
                <div className="first-label"> Total Reactive Power</div>
-               <div className="second-label"><span className="cen">:</span> {device?.t_kvar||0.00} kVAR</div>
+               <div className="second-label"><span className="cen">:</span> {device?.t_kvar||0.00} <span className="side-value">kVAR</span></div>
             </div>
             <div className="label">
                <div className="first-label"> Total Apparent Power</div>
-               <div className="second-label"><span className="cen">:</span> {device?.t_kva||0.00} kVA</div>
+               <div className="second-label"><span className="cen">:</span> {device?.t_kva||0.00} <span className="side-value">kVA</span></div>
             </div>
             <div className="label">
                <div className="first-label">Present Power Factor</div>
@@ -659,11 +669,11 @@ const headers = [
 
             <div className="label">
                <div className="first-label">Total Active Energy</div>
-               <div className="second-label"><span className="cen">:</span> {device?.t_act_energy||0.00} kWh</div>
+               <div className="second-label"><span className="cen">:</span> {device?.t_act_energy||0.00} <span className="side-value">kwh</span></div>
             </div>
             <div className="label">
                <div className="first-label">Total Apparent Energy</div>
-               <div className="second-label"><span className="cen">:</span> {device?.t_aprnt_engy||0.00} kVAh</div>
+               <div className="second-label"><span className="cen">:</span> {device?.t_aprnt_engy||0.00} <span className="side-value">kVAh</span></div>
             </div>
             <div className="label">
                <div className="first-label">Average Power Factor</div>
@@ -671,11 +681,11 @@ const headers = [
             </div>
             <div className="label">
                <div className="first-label"> Active Power Max Demand</div>
-               <div className="second-label"><span className="cen">:</span>{parseFloat(device?.act_pwr_mxd).toFixed(2)||0.00} kW</div>
+               <div className="second-label"><span className="cen">:</span>{parseFloat(device?.act_pwr_mxd).toFixed(2)||0.00} <span className="side-value">kW</span></div>
             </div>
             <div className="label">
                <div className="first-label"> Apparent Power Max Demand</div>
-               <div className="second-label"><span className="cen">:</span> {parseFloat(device?.kva_mxd).toFixed(2)||0.00} kWA</div>
+               <div className="second-label"><span className="cen">:</span> {parseFloat(device?.kva_mxd).toFixed(2)||0.00} <span className="side-value">kWA</span></div>
             </div>
 
 
@@ -780,7 +790,7 @@ const headers = [
                             required
                             onChange={(e) => setDropdownValue(e.target.value)}
                         >
-                            <option value="" disabled>Select the value</option>
+                            <option value="" disabled selected>Select the value</option>
                             <option value="today">Today</option>
                             <option value="lastprevious">Last Day</option>
                             <option value="custom">Custom</option>
@@ -833,10 +843,21 @@ const headers = [
                     <button type="button" className="cancel-btn" onClick={closeModel}>
                         Cancel
                     </button>
-                    <button type="submit" className={` ${disable ? 'disable' : 'save-btn'}`} disabled={disable}>
-                        <CSVLink data={exportData} headers={headers} filename={`emd-device-${dropdownValue}.csv`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                            Download
-                        </CSVLink>
+                    <button type="button" className={` ${disable ? 'disable' : 'save-btn'}`} disabled={disable}>
+                    {exportData?.length > 0 ? (
+                <CSVLink 
+                    data={exportData} 
+                    headers={headers} 
+                    filename={`emd-device-${dropdownValue}.csv`} 
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                    Download
+                </CSVLink>
+            ) : (
+                 <>
+                 No Data Available
+                 </>   
+            )}
                     </button>
                 </div>
             </form>

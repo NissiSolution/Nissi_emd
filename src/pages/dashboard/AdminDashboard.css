@@ -4,6 +4,8 @@
                          "sidebar main"
                         "footer footer";    
                          grid-template-columns: 200px 2fr;
+                         background-color: #063c91;
+                         color:  #FFFFFF;
  /* background-color: var(--primary-bg-color);                     */
 }
 .admin-dashboard-main{
@@ -30,12 +32,14 @@
 }
 .admin-card{
     cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    
+    box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
     text-align: center;
     width: 350px;
     padding:  2.3rem 1rem;
     animation: boxLoad 1.5s ease-out;
-  
+    background-color: #FFFFFF;
+    color: #000;
 
 }
 

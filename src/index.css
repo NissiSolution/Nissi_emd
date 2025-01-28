@@ -7,8 +7,29 @@
   line-height: 1.5;
 }
 
+body{
+  /* background-color: #f9fbf8;  */
+/* background-color: #fcfefa; */
+ /* background-color:  #fffeff; */
+ /* color: #2508ff; */
+ /* background-color: #f0f0f0; */
+ /* color: #3f120d; */
+ /* background-color: whitesmoke; */
+ /* background-color: #f0f4ff; */
+ /* background-color: #f8faff; */
+ /* background-color: #f2fcfe; */
+ /* background-color: #e8eeff; */
+  /* color: #fa3b19;  */
+  /* background: rgba(0, 210, 255,0.31);   */
+  /* background: -webkit-linear-gradient(to top, #3a7bd5, #00d2ff);  
+  background: linear-gradient(to top, #3a7bd5, #00d2ff); */
+  /* background: #56CCF2; 
+  background: -webkit-linear-gradient(to left, #2F80ED, #56CCF2);  
+  background: linear-gradient(to left, #2F80ED, #56CCF2); */
+   
+} 
 :root{
---primary-bg-color:#f9fbf8;
+/* --primary-bg-color:#f9fbf8; */
 /* --primary-bg-color:#f2f7ff; */
 /* --secondary-bg-color:#Fff;
 --primary-text-color:#25396f;

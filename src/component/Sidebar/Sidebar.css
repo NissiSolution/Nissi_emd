@@ -5,9 +5,11 @@ a {
   
   .sidebar {
     /* background-color: var(--secondary-bg-color); */
-    background-color: #000963;
+    /* background-color: #000963; */
     /* background-color: #000B14; */
-  
+    background-color: #150485;
+    /* background: #0575E6;  */
+
     color:  #fcfdfe;
     width: 200px !important;
  
@@ -22,7 +24,9 @@ a {
   /* Sidebar Header */
   .sidebar-header {
     padding: 10px;
-   background-color: #000963;
+   background-color: #150485;
+  /* background: #0575E6;  */
+   
     text-align: center;
     border-bottom: 1px solid #ccc;
     color: #FFFFFC;

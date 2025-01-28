@@ -3,6 +3,8 @@
     display: grid;
                          grid-template-columns: 200px 2fr;
                          grid-template-areas: 'sidebar main' 'sidebar main''footer footer';
+                         background-color: #063c91;
+                         color:  #FFFFFF;
 }
 .device-sidebar{
     grid-area: sidebar;
@@ -23,7 +25,12 @@
     padding: 10px 20px;
     align-items: center;
 }
+.device-img{
+    background-color: #fff;
+    color: #000;
+    font-size: 17px;
 
+}
 @media only screen and (max-width: 600px) {
     .device-page{
         display: flex;
@@ -114,6 +121,7 @@
     font-size: 16px;
 }
     .device-img .device-img-lead img{
+
         width: 100% ;        border-radius: 10px;
     }
 }
@@ -146,12 +154,14 @@ padding: 5px;
     align-content: center;
 
 }
-.device-img img{
-    border-radius: 10px;
 
+.device-img img{
+    
+    border-radius: 10px;
+object-fit: contain;
 }
 .device-img .device-img-lead >div{
-    padding: 0 10px;
+    padding: 0 5px;
 }
 .device-img .device-img-lead figcaption{
     text-overflow: clip;

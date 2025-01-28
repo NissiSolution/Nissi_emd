@@ -4,7 +4,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../component/Sidebar/Sidebar";
 import Footer from "../../component/footer/Footer";
-import emd from "../../assets/asset4.png";
+import emd from "../../assets/asset3.jpg";
 import { HiStatusOnline } from "react-icons/hi";
 export default function Device() {
   const [availableDevice, setAvailableDevice] = useState([]); // Initialize as an empty array

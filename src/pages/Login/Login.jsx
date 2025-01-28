@@ -1,8 +1,8 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import'./Login.css'
 import axios from 'axios'
-import tech from '../../assets/technology.png'
-import left from '../../assets/left.jpg'
+import tech from '../../assets/ui-design.png'
+import left from '../../assets/login3.svg'
 import { CgProfile } from "react-icons/cg";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useNavigate } from 'react-router-dom';
@@ -56,9 +56,9 @@ export default function Login() {
                     localStorage.setItem("userId", userid);
                     localStorage.setItem("role", role === '1' ? "admin" : "user");
                     localStorage.setItem("auth", true);
-    
-                    // Navigate to the appropriate page
-                    navigate(role === '1' ? '/main' : '/dashboard', { replace: true });
+                    
+                    navigate('/dashboard')
+                   
                 }
             } else {
                 console.error("Unexpected response code:", response.status);
