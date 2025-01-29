@@ -42,14 +42,42 @@ const transformData = (data) => {
   return transformedData;
 };
 
-// Function to generate random colors
+// Function to generate random colors, avoiding those too similar to the background color
 const generateRandomColor = () => {
   const letters = "0123456789ABCDEF";
   let color = "#";
-  for (let i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() *15)];
+  
+  // Ensure contrast by checking the lightness of generated color
+  while (true) {
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    
+    // Check if the color is too close to the background color
+    if (isColorContrasting(color, "#063c91")) {
+      break;
+    } else {
+      color = "#"; // reset and try again
+    }
   }
+  
   return color;
+};
+
+// Helper function to check if two colors have good contrast
+const isColorContrasting = (color1, color2) => {
+  const getColorLuminance = (hex) => {
+    const rgb = hex.match(/[a-f0-9]{2}/gi).map(x => parseInt(x, 16));
+    const lum = rgb.map(function (x) {
+      x /= 255;
+      return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+    });
+    return lum[0] * 0.2126 + lum[1] * 0.7152 + lum[2] * 0.0722;
+  };
+
+  const luminance1 = getColorLuminance(color1);
+  const luminance2 = getColorLuminance(color2);
+  return Math.abs(luminance1 - luminance2) > 0.5; // Simple threshold for good contrast
 };
 
 const WorkingHoursChart = ({ data }) => {
@@ -98,24 +126,27 @@ const WorkingHoursChart = ({ data }) => {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
-      <BarChart data={chartData}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="date" tick={{ fill: '#fff' }} />
-        <YAxis  tick={{ fill: '#fff' }}/>
-        <Tooltip contentStyle={{ color: '#fff', backgroundColor: '#333' }} />
-        <Legend />
-        {/* Dynamically render Bar components based on the data */}
-        {data.map(([device]) => (
-          <Bar
-            key={device}
-            dataKey={device}
-            fill={deviceColors[device] || "#8884d8"} // Assign the generated color or fallback to a default color
-          />
-        ))}
-      </BarChart>
-    </ResponsiveContainer>
+    <div className="chart-container">
+      <ResponsiveContainer width="80%" height={400}>
+        <BarChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="date" tick={{ fill: '#fff' }} />
+          <YAxis tick={{ fill: '#fff' }} />
+          <Tooltip contentStyle={{ color: '#fff', backgroundColor: '#333' }} />
+          <Legend />
+          {/* Dynamically render Bar components based on the data */}
+          {data.map(([device]) => (
+            <Bar
+              key={device}
+              dataKey={device}
+              fill={deviceColors[device] || "#8884d8"} // Assign the generated color or fallback to a default color
+            />
+          ))}
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
   );
 };
 
 export default WorkingHoursChart;
+

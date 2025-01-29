@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from 'react'
 import'./Login.css'
 import axios from 'axios'
-import tech from '../../assets/ui-design.png'
+import tech from '../../assets/logo2.png'
 import left from '../../assets/login3.svg'
 import { CgProfile } from "react-icons/cg";
 import { RiLockPasswordLine } from "react-icons/ri";

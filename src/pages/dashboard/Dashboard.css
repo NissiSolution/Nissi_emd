@@ -10,9 +10,12 @@
  /* background-color: var(--primary-bg-color);                     */
  background-color: #063c91;
     color:  #FFFFFF;
+    min-height: 100vh; 
+
 }
 .dashboard-main{
   grid-area: main;
+  min-height: calc(100vh - 60px); 
 }
 .dashboard-sidebar{
   grid-area: sidebar;
@@ -251,9 +254,7 @@ top: 20px;
 }
 /* Extra small devices (phones, 600px and down) */
 @media only screen and (max-width: 600px) {
-  .dashboard{
-    all:unset;
-  }
+  
   .admin-main-content{
     padding: 30px ;
     display:  flex;
@@ -263,18 +264,42 @@ top: 20px;
   
     gap: 40px;
   }
-  .bar-chat{
-    display: none;
+  .recharts-cartesian-axis-tick-value {
+    font-size: 10px; /* Smaller tick values on mobile */
   }
+
+  .recharts-tooltip-label {
+    font-size: 12px; /* Smaller tooltip font on mobile */
+  }
+
+  .recharts-tooltip-item {
+    font-size: 12px; /* Smaller tooltip item text */
+  color: #000;
+  }
+
+  .recharts-legend-item-text {
+    font-size: 12px; /* Smaller legend text */
+  
+  }
+  .recharts-responsive-container {
+    height: 250px; /* Reduce the height for very small screens */
+  }
+
+  .recharts-cartesian-axis-tick-value {
+    font-size: 8px; /* Even smaller font size on very small screens */
+  }
+
   .dashboard-side-bar{
     width: 100%;
   }
-  .dashboard{flex-direction: column;}
+  .dashboard{
+    background-color: #063c91;
+    display:  flex !important;
+    flex-direction: column;
+  
+  }
   .dashboard-header .profile-icon{
     display: none;
-  }.dashboard-header{
-    all: unset;
-
   }
   .dashboard-header h2{
     font-size: 18px;
@@ -339,9 +364,7 @@ height: 20px;
   }
 }
 /* Small devices (portrait tablets and large phones, 600px and up) */
-@media only screen and (min-width: 600px) {
 
-}
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
   .section-img{

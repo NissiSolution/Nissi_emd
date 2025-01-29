@@ -10,6 +10,12 @@ import { BsThreeDotsVertical } from "react-icons/bs";
 import { format } from 'date-fns';
 import ReactLoading from 'react-loading';
 import { CSVLink } from "react-csv";
+import WorkingHours from './WorkingHours'
+import { Line } from 'react-chartjs-2';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+
+// Register the necessary Chart.js components
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 export default function DeviceView() {
   let {deviceId}=useParams();
   const location = useLocation();
@@ -29,6 +35,10 @@ export default function DeviceView() {
 const [customDate,setCustomDate]=useState({})
 const [disable,setDisable]=useState(true)
 const [time,setTime]=useState()
+  const [data, setData] = useState([]);
+  const [frequencyData, setFrequencyData] = useState([]);
+  const [maxFrequency, setMaxFrequency] = useState(0);
+
   const [deviceInput,setDeviceInput]=useState({
     deviceId: '',
     buzzer_start_value:'',
@@ -71,7 +81,7 @@ const [time,setTime]=useState()
   const handlePowerDeviceDetails = () => {
     if (currentDevice) {
       setDeviceInput({
-        deviceId: currentDevice.deviceId,
+        deviceId: currentDevice?.deviceId,
         buzzer_start_value: currentDevice?.buzzer_start_value,
         buzzer_time: currentDevice?.buzzer_time,
         relay1_start_value: currentDevice?.relay1_start_value,
@@ -118,36 +128,45 @@ const [time,setTime]=useState()
       };
       const meterValue=meter()
       let startValue,endValue;
+      let review=''
       // console.log(meterValue);
       const meterFunction= async()=>{
         const buzzerStart = parseInt(currentDevice?.buzzer_start_value) ; 
         const relay1Start = parseInt(currentDevice?.relay1_start_value); 
         const relay2Start = parseInt(currentDevice?.relay2_start_value) ;
-        // console.log(buzzerStart,relay1Start,relay2Start);
-        
+     
         if (meterValue < buzzerStart) {
           startValue = 0;
           endValue = buzzerStart - 1;
+          review=`buzzerStart Value ${buzzerStart} `
           // console.log('a'+startValue,endValue);
           
       } else if (meterValue >= buzzerStart && meterValue < relay1Start) {
           startValue = buzzerStart;
           endValue = relay1Start;
+          review=`buzzerStart Value ${endValue}`
+
           // console.log('b'+startValue,endValue);
 
       } else if (meterValue >= relay1Start && meterValue < relay2Start) {
           startValue = relay1Start;
           endValue = relay2Start;
+          review=`buzzerStart Value ${endValue}`
+
           // console.log('c'+startValue,endValue);
 
       } else {
           startValue = relay2Start;
           endValue = relay2Start + 100;
+          review=`buzzerStart Value ${startValue} to End Value ${endValue}`
+
           // console.log('d'+startValue,endValue);
       
         }
       }
       meterFunction()
+
+      
       // console.log(startValue,endValue);
       
   const handleToggleDropdown = (e) => {
@@ -460,6 +479,7 @@ document.onclick = handleDocumentClick;
     if (device) {
       setLora(device.lora_status);
       setRS485(device.rs485_status);
+      getDeviceWorkingHours(currentDevice?.deviceId)
       const tim = new Date(device?.time * 1000); // Convert UNIX timestamp to Date object
       const formattedTime = format(tim, 'dd-MM-yyyy hh:mm:ss a');
      setTime(formattedTime)
@@ -508,6 +528,65 @@ const headers = [
   { label: "RS485 Status", key: "rs485_status" },
   { label: "LoRa Status", key: "lora_status" }
 ]
+const getDeviceWorkingHours = async (total) => {
+  const data1 = [];
+  try {
+      const data = {
+        requestType: "getDeviceWorkingHours",
+        data: JSON.stringify({ deviceId: total }),
+      };
+
+      const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+      });
+
+      if (response.status === 200 && response.data) {
+        const workingHours = calculateWorkingHours(response.data);
+        data1.push([total, workingHours]);
+      }
+    setData(data1);
+  } catch (error) {
+    console.error("Error during API call:", error);
+  }
+};
+
+const calculateWorkingHours = (data) => {
+  const hoursPerDay = {};
+  const groupedData = {};
+
+  data.forEach(item => {
+    const timestamp = parseInt(item.time, 10);
+    const date = new Date(timestamp * 1000);
+
+    const istDate = new Date(date.getTime() + 19800000); // Adjust for IST
+    const localDateString = istDate.toISOString().split('T')[0];
+
+    if (!groupedData[localDateString]) {
+      groupedData[localDateString] = {
+        timestamps: [],
+        totalActiveTime: 0
+      };
+    }
+    groupedData[localDateString].timestamps.push(istDate.getTime() / 1000);
+  });
+
+  for (const date in groupedData) {
+    const timestamps = groupedData[date].timestamps;
+    timestamps.sort((a, b) => a - b);
+
+    let totalActiveTime = 0;
+    for (let i = 1; i < timestamps.length; i++) {
+      const diff = timestamps[i] - timestamps[i - 1];
+      if (diff > 0) totalActiveTime += diff;
+    }
+    hoursPerDay[date] = parseFloat((totalActiveTime / 3600).toFixed(0));
+  }
+
+  return hoursPerDay;
+};
+
 
   return (
     <>
@@ -544,19 +623,31 @@ const headers = [
             <div className="meter">
            
             <ReactSpeedometer
-    minValue={startValue}
-     
+            height={200}
+
+  minValue={startValue}
+  
     maxValue={endValue}
     value={meterValue}
     needleColor="red"
     startColor="green"
-    segments={10}  
     endColor="red"
     textColor={'#fff'}
     currentValueText={`${meterValue}  ${type === '0' ? 'Active Power Max Demand' : 'Apparent Power Max Demand'}    `}
      forceRender={true}
   />
+  
+  <div className="">
+              <div className="dmp">
+              {review}<br/>
+             CurrentValue:{meterValue}
+
+
+              </div>
+
             </div>
+            </div>
+           
           </div>
           <div className="active-btn-time">
           <div className="active-btns">
@@ -601,6 +692,31 @@ const headers = [
             </div>
           
           </div>
+<div className="chart-graph">
+<div className="last-seven">
+
+<div>
+  <h3>Last seven days Active Hours  {currentDevice?.deviceId}</h3>
+</div>
+<div className="seven-working">
+{data&&  <WorkingHours data={data} deviceName={currentDevice?.deviceId} />}    
+
+</div>
+
+</div>
+{/* <div className='frequency'>
+     <div className="freq"><h2>Device Frequency Data </h2></div> 
+     <div>
+     {frequencyData.length > 0 ? (
+        <Line data={chartData} options={options} />
+      ) : (
+        <p>Loading data...</p>
+      )}
+     </div>
+      */}
+</div>
+         
+       
           <div className="device-table-details">
           
       
@@ -677,7 +793,7 @@ const headers = [
             </div>
             <div className="label">
                <div className="first-label">Average Power Factor</div>
-               <div className="second-label"><span className="cen">:</span> {parseFloat(avgPower).toFixed(2)||0}</div>
+               <div className="second-label"><span className="cen">:</span> {avgPower&&parseFloat(avgPower).toFixed(2)||0}</div>
             </div>
             <div className="label">
                <div className="first-label"> Active Power Max Demand</div>

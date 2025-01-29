@@ -90,40 +90,47 @@ function Dashboard() {
   const getDeviceWorkingHours = async (total) => {
     const data1 = [];
     try {
-      for (let id of total) {
+      // Make all API requests in parallel using Promise.all
+      const responses = await Promise.all(total.map(id => {
         const data = {
           requestType: "getDeviceWorkingHours",
           data: JSON.stringify({ deviceId: id }),
         };
-
-        const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+  
+        return axios.post("https://nissiemd.co.in/mm.php", data, {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
           },
+        }).then(response => {
+          if (response.status === 200 && response.data) {
+            const workingHours = calculateWorkingHours(response.data);
+            return [id, workingHours];
+          }
+          return null;
+        }).catch(error => {
+          console.error(`Error fetching data for device ${id}:`, error);
+          return null;
         });
-
-        if (response.status === 200 && response.data) {
-          const workingHours = calculateWorkingHours(response.data);
-          data1.push([id, workingHours]);
-        }
-      }
-      setData(data1);
+      }));
+  
+      // Filter out null responses (failed requests)
+      const validData = responses.filter(res => res !== null);
+      setData(validData);
     } catch (error) {
       console.error("Error during API call:", error);
     }
   };
-
+  
   const calculateWorkingHours = (data) => {
-    const hoursPerDay = {};
     const groupedData = {};
-
+  
     data.forEach(item => {
       const timestamp = parseInt(item.time, 10);
       const date = new Date(timestamp * 1000);
-
+  
       const istDate = new Date(date.getTime() + 19800000); // Adjust for IST
       const localDateString = istDate.toISOString().split('T')[0];
-
+  
       if (!groupedData[localDateString]) {
         groupedData[localDateString] = {
           timestamps: [],
@@ -132,22 +139,22 @@ function Dashboard() {
       }
       groupedData[localDateString].timestamps.push(istDate.getTime() / 1000);
     });
-
-    for (const date in groupedData) {
+  
+    const hoursPerDay = {};
+    Object.keys(groupedData).forEach(date => {
       const timestamps = groupedData[date].timestamps;
       timestamps.sort((a, b) => a - b);
-
+  
       let totalActiveTime = 0;
       for (let i = 1; i < timestamps.length; i++) {
         const diff = timestamps[i] - timestamps[i - 1];
         if (diff > 0) totalActiveTime += diff;
       }
-      hoursPerDay[date] = parseFloat((totalActiveTime / 3600).toFixed(0));
-    }
-
+      hoursPerDay[date] = parseFloat((totalActiveTime / 3600).toFixed(0)); // Convert to hours and round
+    });
+  
     return hoursPerDay;
   };
-
   useEffect(() => {
     fetchData();
   }, []);
@@ -193,7 +200,7 @@ function Dashboard() {
           </div>
 
           <div className="bar-chat">
-            <h3>Last 7 Days Active Hours</h3>
+            <h3>Last 7 Days Active Hours Available Devices</h3>
             {loading ? (
               <div className="loader">Loading active hours...</div> // Loader for chart
             ) : data?.length > 0 ? (

@@ -44,8 +44,8 @@ height: 2rem;
     align-items: center;
 }
 .header-img img{
-    width: 60px;
-    height: 60px;
+    width: 130px;
+    height: 70px;
 }
 
 .main-left{
@@ -242,4 +242,16 @@ justify-content: center;
     width: 290px;
 }
   
+}
+
+@media only screen and (min-width:1024px){
+.login-page{
+    height: 100vh;
+}
+.login-main{
+    display: flex;
+    justify-content: space-around;
+align-items: center;
+align-content: center;
+}
 }

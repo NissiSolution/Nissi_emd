@@ -11,6 +11,8 @@ color:  #FFFFFF;
 .users-main{
     grid-area: main;
     padding: 10px;
+  min-height: calc(100vh - 40px);
+
 }
 .users-footer{
     grid-area: footer;
@@ -34,12 +36,13 @@ color:  #FFFFFF;
 }
 .users-table table{
     width: 1000px;
+
     border-collapse: collapse;
     border-radius: 10px;
         
 }
 .users-view{
-    width: 500px !important;
+   min-width: 500px !important;
 }
 .users-table table th,.users-table table td{
     padding: 10px 20px;
@@ -111,3 +114,13 @@ color:  #FFFFFF;
     }
     
 } 
+@media only screen and (min-width:1300px)
+{
+    .users-table table{
+        min-width: 1650px !important;
+        height: 100vh;
+        border-collapse: collapse;
+        border-radius: 10px;
+            
+    }
+}

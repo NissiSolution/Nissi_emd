@@ -9,6 +9,7 @@
  /* background-color: var(--primary-bg-color);                     */
 }
 .admin-dashboard-main{
+  min-height: calc(100vh - 40px);
   grid-area: main;
 }
 .admin-dashboard-sidebar{
@@ -54,18 +55,14 @@
   }
 }
 @media only screen and (max-width: 600px) {
-    .dashboard{
-        all:unset;
-      }
+   
       .admin-dashboard-side-bar{
         width: 100%;
       }
       .admin-dashboard-page{
-        display: flex;
+        display:  flex !important;
         flex-direction: column;}
-      .dashboard-header{
-        all: unset;
-      }
+     
       .dashboard-header h2{
         font-size: 18px;
         padding: 10px;

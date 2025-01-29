@@ -10,6 +10,8 @@
     grid-area: sidebar;
 }
 .device-main{
+    min-height: calc(100vh - 60px); 
+
     grid-area: main;
 }
 .device-footer{
