@@ -69,6 +69,9 @@ color:  #FFFFFF;
 
 @media only screen and (max-width: 600px) 
 {
+    .users-view{
+        min-width: 200px !important;
+     }
 
     .users-page{
         display: flex;

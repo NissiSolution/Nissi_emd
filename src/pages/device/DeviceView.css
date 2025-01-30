@@ -57,8 +57,9 @@
     text-align: center;
 }
 .frequency :nth-child(2){
-    background-color: #fff;
-   
+    border-radius: 20px;
+    background-color: white;
+ padding: 20px;  
 }
 
 .active-btn-time .time :nth-child(1){
@@ -98,7 +99,18 @@
 }
 
 .frequency{
-    width: 800px;
+    width: 280px;
+    color:#333;
+    padding: 10px;
+   max-height : 400px;
+}
+.frequency h3{
+    color: whitesmoke;
+}
+.pie-chart{
+    margin: 20px 0;
+    display: flex;
+    gap: 100px;
 }
 .device-details{
     padding: 10px;
@@ -235,7 +247,7 @@ font-size: 14px;
     width: 400px;
     text-align: left;
     z-index: 1000;
-    transition: all 0.3s 1s ease-out; 
+    transition: all  1s cubic-bezier(0.075, 0.82, 0.165, 1); 
   }
   .modal-overlay {
     z-index: 1000;
@@ -249,7 +261,7 @@ font-size: 14px;
     display: flex;
     justify-content: center;
     align-items: center;
-    transition: all 0.3s 1s ease-in-out; 
+    transition: all 2s ease; 
   }
 .modal .active {
     transform: translateY(0); /* Slide down to original position */
@@ -280,9 +292,7 @@ font-size: 14px;
     flex-direction: column;
     margin-bottom: 30px;
 }
-.frequency{
-    display: none;
-}
+
 .meter{
     all: unset;
 }
@@ -291,6 +301,11 @@ font-size: 14px;
     align-items: flex-start;
     justify-content: none;
     gap: 10px;
+}
+.pie-chart{
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
 }
 .device-details{
     padding: 5px;
@@ -324,9 +339,7 @@ p{
 .device-status .box{
     width: 100%;
 }
-.frequency{
-    display: none;
-}
+
 .active-power{
     display: none;
 }

@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from 'react'
+import React,{useEffect, useState,useCallback} from 'react'
 import axios from 'axios'
 import img from '../../assets/asset3.jpg'
 import './DeviceView.css'
@@ -11,10 +11,12 @@ import { format } from 'date-fns';
 import ReactLoading from 'react-loading';
 import { CSVLink } from "react-csv";
 import WorkingHours from './WorkingHours'
-import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
-
+import { Line, Doughnut } from 'react-chartjs-2';
+import { Chart, ArcElement } from "chart.js";
+Chart.register(ArcElement, Tooltip, Legend);
 // Register the necessary Chart.js components
+import DoughnutChart from "./DoughnutChart";
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 export default function DeviceView() {
   let {deviceId}=useParams();
@@ -469,7 +471,7 @@ document.onclick = handleDocumentClick;
   
     const intervalId = setInterval(() => {
       getCurrentData();
-    }, 2000);  
+    }, 5000);  
 
     return () => clearInterval(intervalId);
   }, [deviceId,currentDevice,deviceDetails]);
@@ -588,6 +590,12 @@ const calculateWorkingHours = (data) => {
 };
 
 
+const [currentValue, setCurrentValue] = useState(25);
+const handleValueChange = useCallback((newValue) => {
+  if (newValue !== currentValue) {
+    setCurrentValue(newValue);
+  }
+}, [currentValue]);
   return (
     <>
     <div className="device-view-page">
@@ -693,6 +701,26 @@ const calculateWorkingHours = (data) => {
           
           </div>
 <div className="chart-graph">
+  <div className="pie-chart">
+  <div className="frequency">
+
+<div className="freq"><h3>Frequency </h3></div>
+<DoughnutChart value={device?.freq||49} max={50} />
+
+</div>
+<div className="present-Power frequency">
+
+<div className="freq"><h3>Present-Power Factor </h3></div>
+<DoughnutChart value={presentPower?parseFloat(presentPower).toFixed(2):0} max={1} />
+</div>
+
+<div className="Average Power FactorPower frequency">
+
+<div className="freq"><h3>Average Power Factor </h3></div>
+<DoughnutChart value={avgPower&&parseFloat(avgPower).toFixed(2)||0} max={1} />
+</div>
+  </div>
+
 <div className="last-seven">
 
 <div>
@@ -714,9 +742,9 @@ const calculateWorkingHours = (data) => {
       )}
      </div>
       */}
+   
 </div>
-         
-       
+
           <div className="device-table-details">
           
       
@@ -964,7 +992,7 @@ const calculateWorkingHours = (data) => {
                 <CSVLink 
                     data={exportData} 
                     headers={headers} 
-                    filename={`emd-device-${dropdownValue}.csv`} 
+                    filename={`emd-device-${currentDevice?.deviceId}${dropdownValue}.csv`} 
                     style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                     Download
