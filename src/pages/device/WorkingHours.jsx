@@ -58,7 +58,7 @@ const WorkingHours = ({ data, deviceName }) => {
   // If no data or loading, show a "No Data" LineChart
   if (!data || data.length === 0 || chartData.length === 0) {
     return (
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={200}>
         <LineChart data={[{ date: "No Data", value: 0 }]}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
@@ -82,7 +82,7 @@ const WorkingHours = ({ data, deviceName }) => {
   }
 
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={400}>
       <LineChart data={chartData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis dataKey="date" tick={{ fill: '#000' }} />

@@ -41,7 +41,7 @@ const DoughnutChart = React.memo(({ value, max }) => {
   return (
     <div style={{ textAlign: "center" }}>
       {/* Text above the chart */}
-      <p style={{ marginBottom: "10px", fontSize: "18px", fontWeight: "bold" }}>
+      <p style={{ marginBottom: "7px", fontSize: "18px", fontWeight: "bold" }}>
         Current value: {adjustedValue} / {maxValue}
       </p>
 
@@ -49,7 +49,7 @@ const DoughnutChart = React.memo(({ value, max }) => {
       <Doughnut data={doughnutChartData} options={options} />
 
       {/* Text below the chart */}
-      <p style={{ marginTop: "10px", fontSize: "14px", color: "#666" }}>
+      <p style={{ marginTop: "10px", fontSize: "15px", color: "#333" }}>
         Remaining: {parseFloat(remainingValue).toFixed(2)}
       </p>
     </div>

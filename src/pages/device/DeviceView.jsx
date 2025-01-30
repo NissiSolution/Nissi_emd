@@ -11,6 +11,7 @@ import { format } from 'date-fns';
 import ReactLoading from 'react-loading';
 import { CSVLink } from "react-csv";
 import WorkingHours from './WorkingHours'
+import PowerChart from './PowerChart';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import { Line, Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement } from "chart.js";
@@ -34,12 +35,15 @@ export default function DeviceView() {
   const [exportIsOpen,setExportIsOpen]=useState(false)
   const [exportData,setExportData]=useState([])
   const [loading,setLoading]=useState(false)
+  const [loadingActive,setLoadingActive]=useState(true)
+
 const [customDate,setCustomDate]=useState({})
 const [disable,setDisable]=useState(true)
 const [time,setTime]=useState()
   const [data, setData] = useState([]);
   const [frequencyData, setFrequencyData] = useState([]);
   const [maxFrequency, setMaxFrequency] = useState(0);
+  const [activePower,setActivePower]=useState([])
 
   const [deviceInput,setDeviceInput]=useState({
     deviceId: '',
@@ -131,15 +135,21 @@ const [time,setTime]=useState()
       const meterValue=meter()
       let startValue,endValue;
       let review=''
+      let buzzerStartValue,relay1StartValue,relay2StartValue
       // console.log(meterValue);
       const meterFunction= async()=>{
         const buzzerStart = parseInt(currentDevice?.buzzer_start_value) ; 
         const relay1Start = parseInt(currentDevice?.relay1_start_value); 
         const relay2Start = parseInt(currentDevice?.relay2_start_value) ;
      
+
         if (meterValue < buzzerStart) {
           startValue = 0;
-          endValue = buzzerStart - 1;
+          endValue = buzzerStart;
+          buzzerStartValue=buzzerStart
+          relay1StartValue=relay1Start
+          relay2StartValue=relay2Start
+          
           review=`buzzerStart Value ${buzzerStart} `
           // console.log('a'+startValue,endValue);
           
@@ -481,7 +491,9 @@ document.onclick = handleDocumentClick;
     if (device) {
       setLora(device.lora_status);
       setRS485(device.rs485_status);
+
       getDeviceWorkingHours(currentDevice?.deviceId)
+      getDeviceDailyActivePower(currentDevice?.deviceId)
       const tim = new Date(device?.time * 1000); // Convert UNIX timestamp to Date object
       const formattedTime = format(tim, 'dd-MM-yyyy hh:mm:ss a');
      setTime(formattedTime)
@@ -590,12 +602,71 @@ const calculateWorkingHours = (data) => {
 };
 
 
-const [currentValue, setCurrentValue] = useState(25);
-const handleValueChange = useCallback((newValue) => {
-  if (newValue !== currentValue) {
-    setCurrentValue(newValue);
+const getDeviceDailyActivePower = async (deviceId) => {
+  try {
+    const data = {
+      requestType: "getDeviceActivePower", // Update request type as needed
+      data: JSON.stringify({ deviceId: deviceId }),
+    };
+
+    // Make the API request for the single device
+    const response = await axios.post("https://nissiemd.co.in/mm.php", data, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+
+    if (response.status === 200 && response.data) {
+      // Process the response data
+      
+      const dailyActivePower =  processActivePowerData(response.data);
+      setActivePower(dailyActivePower)
+      setLoadingActive(false)
+
+    } else {
+      console.error(`No data found for device ${deviceId}`);
+      return null;
+    }
+
+  } catch (error) {
+    console.error(`Error fetching data for device ${deviceId}:`, error);
+    return null;
   }
-}, [currentValue]);
+};
+
+// Helper function to process active power data
+const processActivePowerData = (data) => {
+  const dailyActivePower = {};
+
+  // Iterate through the data
+  data.forEach((entry) => {
+    const timestamp = entry.time; // Unix timestamp
+    const activePower = entry.t_act_energy; // Active power value
+
+    // Convert Unix timestamp to ISO date string (YYYY-MM-DD)
+    const date = new Date(timestamp * 1000).toISOString().split("T")[0];
+
+    // Initialize the date entry if it doesn't exist
+    if (!dailyActivePower[date]) {
+      dailyActivePower[date] = {
+        activePower: activePower,
+      };
+    } else {
+      // Update the entry if the current active power is higher
+      if (activePower > dailyActivePower[date].activePower) {
+        dailyActivePower[date] = {
+          activePower: activePower,
+        };
+      }
+    }
+  });
+
+  // Convert the object to an array of { date, time, activePower } objects
+  return Object.keys(dailyActivePower).map((date) => ({
+    date,
+    activePower: dailyActivePower[date].activePower,
+  }));
+};
   return (
     <>
     <div className="device-view-page">
@@ -647,8 +718,10 @@ const handleValueChange = useCallback((newValue) => {
   
   <div className="">
               <div className="dmp">
-              {review}<br/>
              CurrentValue:{meterValue}
+             <br/>
+             {review}
+
 
 
               </div>
@@ -728,6 +801,13 @@ const handleValueChange = useCallback((newValue) => {
 </div>
 <div className="seven-working">
 {data&&  <WorkingHours data={data} deviceName={currentDevice?.deviceId} />}    
+
+</div>
+<div>
+  <h3>Last 30 days Active Energy  {currentDevice?.deviceId}</h3>
+</div>
+<div className="seven-working">
+<PowerChart data={activePower} loading={loadingActive} />   
 
 </div>
 

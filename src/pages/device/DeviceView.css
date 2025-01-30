@@ -278,6 +278,7 @@ font-size: 14px;
     padding-bottom: 10px;
 }
 .seven-working{
+    height: auto;
     border-radius: 10px;
     padding: 20px;
     color: #000;

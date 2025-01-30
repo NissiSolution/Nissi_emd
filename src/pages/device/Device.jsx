@@ -6,6 +6,8 @@ import Sidebar from "../../component/Sidebar/Sidebar";
 import Footer from "../../component/footer/Footer";
 import emd from "../../assets/asset3.jpg";
 import { HiStatusOnline } from "react-icons/hi";
+import { ClipLoader } from 'react-spinners';
+
 export default function Device() {
   const [availableDevice, setAvailableDevice] = useState([]); // Initialize as an empty array
   const [activeDevice, setActiveDevice] = useState([]); // Initialize as an empty array
@@ -198,8 +200,13 @@ const closePass=()=>{
                 <h3>Active Devices</h3>
                 <div className="current-statue-card">
     {loading ? (
-      // Show loader while waiting for devices
-      <div className="loader">Loading active devices...</div>
+
+<div className='loader'>
+<ClipLoader color="#36d7b7" size={50}   className="loader"/>
+
+<div className="loader">Loading active devices...</div>
+
+</div>
     ) : active?.length > 0 ? (
       // Render active devices if available
       active.map((dev) => (

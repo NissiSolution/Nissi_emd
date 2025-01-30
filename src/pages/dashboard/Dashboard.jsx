@@ -9,6 +9,8 @@ import Footer from '../../component/footer/Footer';
 import axios from 'axios';
 import WorkingHoursChart from "./WorkingHoursChart";
 import { useNavigate } from 'react-router-dom';
+import { ClipLoader } from 'react-spinners';
+
 
 function Dashboard() {
   const navigate = useNavigate();
@@ -202,7 +204,13 @@ function Dashboard() {
           <div className="bar-chat">
             <h3>Last 7 Days Active Hours Available Devices</h3>
             {loading ? (
-              <div className="loader">Loading active hours...</div> // Loader for chart
+              <div className='loader'>
+              
+              <ClipLoader color="#36d7b7" size={50} />
+
+              <div className="loader">Loading active hours...</div> 
+              </div>
+                                     
             ) : data?.length > 0 ? (
               <WorkingHoursChart data={data} />
             ) : (
@@ -216,7 +224,12 @@ function Dashboard() {
             <h3>Active Devices</h3>
             <div className="current-statue-card">
               {loading ? (
+                <div className='loader'>
+                <ClipLoader color="#36d7b7" size={50}   />
+
                 <div className="loader">Loading active devices...</div>
+
+                </div>
               ) : active?.length > 0 ? (
                 active.map((dev) => (
                   <div
