@@ -5,14 +5,13 @@ import { Chart as ChartJS, ArcElement } from "chart.js";
 // Register the required elements
 ChartJS.register(ArcElement);
 
-const DoughnutChart = React.memo(({ value, max }) => {
+const DoughnutChart = React.memo(({ value, max,name }) => {
   const maxValue = max; // Dynamic max value
   const adjustedValue = Math.min(Math.max(value, 0), maxValue);
   const remainingValue = maxValue - adjustedValue;
 
   // Memoize the chart data to avoid unnecessary recalculations
   const doughnutChartData = useMemo(() => ({
-    labels: ["Current", "Remaining"],
     datasets: [
       {
         data: [adjustedValue, remainingValue],
@@ -41,17 +40,17 @@ const DoughnutChart = React.memo(({ value, max }) => {
   return (
     <div style={{ textAlign: "center" }}>
       {/* Text above the chart */}
-      <p style={{ marginBottom: "7px", fontSize: "18px", fontWeight: "bold" }}>
-        Current value: {adjustedValue} / {maxValue}
+      <p style={{ marginBottom: "1px", fontSize: "18px", fontWeight: "bold" }}>
+          {name}: {adjustedValue}
       </p>
 
       {/* Doughnut Chart */}
       <Doughnut data={doughnutChartData} options={options} />
 
       {/* Text below the chart */}
-      <p style={{ marginTop: "10px", fontSize: "15px", color: "#333" }}>
+      {/* <p style={{ marginTop: "10px", fontSize: "15px", color: "#333" }}>
         Remaining: {parseFloat(remainingValue).toFixed(2)}
-      </p>
+      </p> */}
     </div>
   );
 });

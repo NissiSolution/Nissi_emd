@@ -134,7 +134,7 @@ const [time,setTime]=useState()
       };
       const meterValue=meter()
       let startValue,endValue;
-      let review=''
+      let review='',review2='',review3=''
       let buzzerStartValue,relay1StartValue,relay2StartValue
       // console.log(meterValue);
       const meterFunction= async()=>{
@@ -150,7 +150,9 @@ const [time,setTime]=useState()
           relay1StartValue=relay1Start
           relay2StartValue=relay2Start
           
-          review=`buzzerStart Value ${buzzerStart} `
+          review=`buzzer Value : ${buzzerStart}`
+          review2=`  FeeDer Value : ${relay1Start}` 
+          review3=`Motor Value : ${relay2Start} `
           // console.log('a'+startValue,endValue);
           
       } else if (meterValue >= buzzerStart && meterValue < relay1Start) {
@@ -716,11 +718,15 @@ const processActivePowerData = (data) => {
      forceRender={true}
   />
   
-  <div className="">
+  <div className="speed-meter-value">
               <div className="dmp">
-             CurrentValue:{meterValue}
+             CurrentValue : {meterValue}
              <br/>
              {review}
+             <br />
+             {review2}
+             <br />
+             {review3}
 
 
 
@@ -766,9 +772,30 @@ const processActivePowerData = (data) => {
               </span>
             </div>
             <div className="avg-power box">
-              <p className="box-lead">Average Power Factor</p>
+              <p className="box-lead">Total Active Power</p>
               <span className="box-sub-lead">
-                {avgPower&&parseFloat(avgPower).toFixed(2)||0.0} <span></span>
+                {device&&parseFloat(device?.t_kw).toFixed(2)||0.0} <span>kW</span>
+              </span>
+            </div>
+            <div className="avg-power box">
+              <p className="box-lead">Total Reactive Power</p>
+              <span className="box-sub-lead">
+                {device&&parseFloat(device?.t_kvar).toFixed(2)||0.0} <span>
+                kVAR</span>
+              </span>
+            </div>
+            <div className="avg-power box">
+              <p className="box-lead">Total ApparentPower </p>
+              <span className="box-sub-lead">
+                {device&&parseFloat(device?.t_kva).toFixed(2)||0.0} <span>
+                kVA</span>
+              </span>
+            </div>
+            <div className="avg-power box">
+              <p className="box-lead">Total Apparent Energy </p>
+              <span className="box-sub-lead">
+                {device&&parseFloat(device?.t_aprnt_engy).toFixed(2)||0.0} <span>
+kVAh</span>
               </span>
             </div>
           
@@ -777,20 +804,24 @@ const processActivePowerData = (data) => {
   <div className="pie-chart">
   <div className="frequency">
 
-<div className="freq"><h3>Frequency </h3></div>
-<DoughnutChart value={device?.freq||49} max={50} />
+<div className="freq">
+  {/* <h3>Frequency </h3> */}
+  </div>
+<DoughnutChart value={device?.freq||49} max={50}  name={'Frequency'}/>
 
 </div>
 <div className="present-Power frequency">
-
-<div className="freq"><h3>Present-Power Factor </h3></div>
-<DoughnutChart value={presentPower?parseFloat(presentPower).toFixed(2):0} max={1} />
+<div className="freq">
+{/* h3>Present-Power Factor </h3>*/}</div> 
+<DoughnutChart value={presentPower?parseFloat(presentPower).toFixed(2):0} max={1} name={'Present-PowerFactor'} />
 </div>
 
 <div className="Average Power FactorPower frequency">
 
-<div className="freq"><h3>Average Power Factor </h3></div>
-<DoughnutChart value={avgPower&&parseFloat(avgPower).toFixed(2)||0} max={1} />
+<div className="freq">
+  {/* <h3>Average Power Factor </h3> */}
+  </div>
+<DoughnutChart value={avgPower&&parseFloat(avgPower).toFixed(2)||0} max={1} name={'Average-PowerFactor'} />
 </div>
   </div>
 

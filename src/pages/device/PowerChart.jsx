@@ -21,7 +21,7 @@ const PowerChart = ({ data, loading }) => {
         labels: filteredData.map(item => item.date),
         datasets: [
             {
-                label: 'Active Energy',
+                label: 'Active Energy kwh ',
                 data: filteredData.map(item => parseFloat(item.activePower)),
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
